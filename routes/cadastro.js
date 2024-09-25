@@ -27,6 +27,7 @@ router.post("/", async function (req, res) {
       const senha = fields["senha"][0];
       const rsenha = fields["rsenha"][0];
 
+      // Verificações básicas
       if (
         senha.length == 0 ||
         fields.email[0].length == 0 ||
@@ -50,8 +51,25 @@ router.post("/", async function (req, res) {
 
       const hashedPassword = await bcrypt.hash(senha, saltRounds);
 
-      // Verificação de imagem
+      // Verificação do tipo de usuário
+      const tipoUsuario = fields["tipo"][0];
+      let deOndeImporta = null;
+      let sobreMim = null;
       let nomeimg = null;
+
+      // Se o usuário for vendedor, esses campos serão processados
+      if (tipoUsuario === "vendedor") {
+        deOndeImporta = fields["deOndeImporta"] ? fields["deOndeImporta"][0] : null;
+        sobreMim = fields["sobreMim"] ? fields["sobreMim"][0] : null;
+
+        // Verificação de imagem obrigatória para vendedores
+        if (!files.imagem[0] || files.imagem[0].size === 0) {
+          console.error("Foto de perfil é obrigatória para vendedores.");
+          return res.redirect("/cadastro?erro=6"); // Erro para foto obrigatória
+        }
+      }
+
+      // Processamento da imagem (opcional para clientes, obrigatória para vendedores)
       if (files.imagem[0] && files.imagem[0].size > 0) {
         const file = files.imagem[0];
         const hash = crypto
@@ -85,17 +103,17 @@ router.post("/", async function (req, res) {
         });
       }
 
-      // Criação do usuário com base na model refatorada
+      // Criação do usuário com base na model
       await Usuario.create({
         nome: fields["nome"][0],
         senha: hashedPassword,
         email: fields["email"][0],
-        fotoPerfil: nomeimg,
         telefone: fields["telefone"] ? fields["telefone"][0] : null,
         dataNascimento: fields["dataNascimento"] ? fields["dataNascimento"][0] : null,
-        tipo: fields["tipo"] ? fields["tipo"][0] : 'cliente',  // Cliente por padrão
-        deOndeImporta: fields["deOndeImporta"] ? fields["deOndeImporta"][0] : null,
-        sobreMim: fields["sobreMim"] ? fields["sobreMim"][0] : null,
+        tipo: tipoUsuario,  // Cliente ou vendedor
+        deOndeImporta: tipoUsuario === "vendedor" ? deOndeImporta : null, // Apenas para vendedores
+        sobreMim: tipoUsuario === "vendedor" ? sobreMim : null, // Apenas para vendedores
+        fotoPerfil: nomeimg,  // Salva a foto se enviada, independente do tipo
       });
 
       return res.redirect("/login?erro=0");

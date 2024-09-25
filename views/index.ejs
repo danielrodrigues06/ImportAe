@@ -7,5 +7,10 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <% if (logado) { %>  <!-- Verifica se o usuário está logado -->
+      <a href="/logout" class="btn btn-danger">Logout</a>
+    <% } else { %>
+      <a href="/login" class="btn btn-primary">Login</a>
+    <% } %>
   </body>
 </html>

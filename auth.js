@@ -15,12 +15,12 @@ module.exports = function (passport) {
 
   passport.deserializeUser(async (id, done) => {
     try {
-      let user = await Usuario.findAll({
+      let user = await Usuario.findOne({
         where: {
           id: id,
         },
       });
-      done(null, user);
+      done(null, user); // Aqui, user pode ser null se não for encontrado
     } catch (err) {
       done(err, null);
     }
