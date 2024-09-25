@@ -1,35 +1,49 @@
+// models/Produto.js
+const sequelize = require("../db.js");
 const { DataTypes } = require("sequelize");
-const sequelize = require("../db");
-const Usuario = require("./usuario"); // Sua model de Usuario
+const Usuario = require("./Usuario");
 
 const Produto = sequelize.define("Produto", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   nome: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   descricao: {
     type: DataTypes.TEXT,
-    allowNull: false,
   },
   preco: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
-  usuarioId: {
-    type: DataTypes.INTEGER,
+  fotos: {
+    type: DataTypes.JSON, // Alterado para JSON para suportar arrays
     allowNull: false,
+  },
+  categoria: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  origem: {
+    type: DataTypes.ENUM,
+    values: ['China', 'EUA'],
+    allowNull: false,
+  },
+  vendedorId: {
+    type: DataTypes.INTEGER,
     references: {
       model: Usuario,
       key: "id",
     },
-  },
-  imagem: {
-    type: DataTypes.STRING,
-    allowNull: true, // Imagem é opcional
+    allowNull: false,
   },
 });
 
-// Relacionamento com o usuário (vendedor)
-Produto.belongsTo(Usuario, { foreignKey: "usuarioId" });
+Usuario.hasMany(Produto, { foreignKey: "vendedorId" });
+Produto.belongsTo(Usuario, { foreignKey: "vendedorId" });
 
 module.exports = Produto;

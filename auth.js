@@ -13,14 +13,14 @@ module.exports = function (passport) {
     });
   });
 
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (obj, done) => {
     try {
       let user = await Usuario.findOne({
         where: {
-          id: id,
+          id: obj.id, // Ajuste para acessar a propriedade `id` correta do objeto
         },
       });
-      done(null, user); // Aqui, user pode ser null se não for encontrado
+      done(null, user);
     } catch (err) {
       done(err, null);
     }

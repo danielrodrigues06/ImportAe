@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
 const router = express.Router();
-const Usuario = require("../model/usuario");
+const Usuario = require("../model/Usuario");
 var saltRounds = 10;
 
 router.get("/", function (req, res) {

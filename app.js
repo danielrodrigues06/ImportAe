@@ -13,6 +13,7 @@
   var cadastroRouter = require('./routes/cadastro');
   var loginRouter = require('./routes/login');
   var logoutRouter = require('./routes/logout');
+  var cadastrarProdutoRouter = require('./routes/cadastrarproduto');
 
   var app = express();
 
@@ -34,10 +35,11 @@
     resave: false,
     saveUninitialized: true
   }));
-
+  
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());
+  
 
   function authenticationMiddleware(req, res, next) {
     if (req.isAuthenticated()) {
@@ -49,11 +51,22 @@
     res.redirect("/login?erro=1");
   }
 
+  function vendedorMiddleware(req, res, next) {
+    if (req.isAuthenticated()) {
+      console.log(req.user); // Log para verificar os dados do usuário
+      if (req.user.tipo === 'vendedor') {
+        return next();
+      }
+    }
+    res.status(403).send("Acesso negado: apenas vendedores podem acessar esta rota.");
+  }
+
   app.use('/', indexRouter);
   app.use('/users', usersRouter);
   app.use('/cadastro', cadastroRouter);
   app.use('/login', loginRouter);
   app.use('/logout', logoutRouter);
+  app.use('/cadastrarProduto',vendedorMiddleware, cadastrarProdutoRouter);
 
     
 
