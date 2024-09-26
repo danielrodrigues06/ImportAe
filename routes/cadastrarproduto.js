@@ -27,7 +27,7 @@ router.get('/', function(req, res) {
 
 // Rota para cadastrar produto com upload de imagens
 router.post('/', upload.array('imagem', 5), async (req, res) => {
-    const { nome, descricao, preco, categoria, origem } = req.body;
+    const { nome, descricao, preco, categoria, origem, estoque} = req.body;
     
     try {
         const fotosArray = req.files.map(file => file.filename); // Captura os nomes dos arquivos enviados
@@ -39,6 +39,7 @@ router.post('/', upload.array('imagem', 5), async (req, res) => {
             fotos: fotosArray,
             categoria,
             origem,
+            estoque,
             vendedorId: req.user.id,
         });
 

@@ -33,12 +33,16 @@ const Produto = sequelize.define("Produto", {
     values: ["China", "EUA"],
     allowNull: false,
   },
-  vendedorId: {
+   vendedorId: {
     type: DataTypes.INTEGER,
     references: {
       model: Usuario,
       key: "id",
     },
+    allowNull: false,
+  },
+  estoque: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });

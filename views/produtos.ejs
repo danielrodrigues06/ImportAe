@@ -37,6 +37,7 @@
               <h5 class="card-title"><%= produto.nome %></h5>
               <p class="card-text">Preço: R$ <%= produto.preco %></p>
               <p class="card-text"><%= produto.descricao %></p>
+              <p class="card-text">Estoque: <%= produto.estoque %></p>
             </div>
             <div class="card-footer">
                 <small class="text-muted">
@@ -45,6 +46,9 @@
                       <img src="/imagens/<%= produto.vendedor.fotoPerfil %>" alt="Foto do Vendedor" class="img-fluid rounded-circle" width="30">
                   <% } %>
                   </small>
+                  <a href="/comprar/<%= produto.id %>" class="btn btn-primary float-right">
+                    <i class="bi bi-cart-fill"></i> Comprar
+                  </a>
             </div>
           </div>
         </div>

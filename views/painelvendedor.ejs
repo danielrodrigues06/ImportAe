@@ -1,0 +1,114 @@
+<!-- views/painelVendedor.ejs -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Painel do Vendedor</title>
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Painel do Vendedor</h1>
+
+    <!-- Formulário para editar perfil -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">Editar Perfil</div>
+      <div class="card-body">
+        <form action="/painelVendedor/editar-perfil" method="POST" enctype="multipart/form-data">          <div class="form-group">
+            <label for="fotoPerfil">Foto do Perfil</label>
+            <img src="/imagens/<%= vendedor.fotoPerfil %>" alt="Foto do Perfil" class="img-thumbnail">
+            <input type="file" id="fotoPerfil" name="fotoPerfil">
+          </div>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" class="form-control" id="nome" name="nome" value="<%= vendedor.nome %>" required>
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" value="<%= vendedor.email %>" required>
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input type="text" class="form-control" id="telefone" name="telefone" value="<%= vendedor.telefone %>" required>
+          </div>
+    
+          <div class="form-group">
+            <label for="sobreMim">Sobre Mim</label>
+            <textarea class="form-control" id="sobreMim" name="sobreMim" rows="3"><%= vendedor.sobreMim %></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de produtos -->
+    <h2 class="mb-4">Seus Produtos</h2>
+    <div class="row">
+      <% produtos.forEach(produto => { %>
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title"><%= produto.nome %></h5>
+              <p class="card-text"><%= produto.descricao %></p>
+              <p class="card-text font-weight-bold">Preço: R$<%= produto.preco %></p>
+
+              <!-- Formulário para editar produto -->
+              <form action="/painelVendedor/editar-produto/<%= produto.id %>" method="POST" class="mb-3"  enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="nomeProduto<%= produto.id %>">Nome do Produto</label>
+                  <input type="text" class="form-control" id="nomeProduto<%= produto.id %>" name="nome" value="<%= produto.nome %>" required>
+                </div>
+                <div class="form-group">
+                  <label for="descricaoProduto<%= produto.id %>">Descrição</label>
+                  <textarea class="form-control" id="descricaoProduto<%= produto.id %>" name="descricao" rows="2" required><%= produto.descricao %></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="precoProduto<%= produto.id %>">Preço</label>
+                  <input type="number" class="form-control" id="precoProduto<%= produto.id %>" name="preco" value="<%= produto.preco %>" required>
+                </div>
+                <div class="form-group">
+                  <label for="categoriaProduto<%= produto.id %>">Categoria</label>
+                  <select class="form-control" id="categoriaProduto<%= produto.id %>" name="categoria" required>
+                    <option value="Categoria1" <%= produto.categoria === 'Categoria1' ? 'selected' : '' %>>Categoria 1</option>
+                    <option value="Categoria2" <%= produto.categoria === 'Categoria2' ? 'selected' : '' %>>Categoria 2</option>
+                    <option value="Categoria3" <%= produto.categoria === 'Categoria3' ? 'selected' : '' %>>Categoria 3</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="origemProduto<%= produto.id %>">Origem</label>
+                  <select class="form-control" id="origemProduto<%= produto.id %>" name="origem" required>
+                    <option value="China" <%= produto.origem === 'China' ? 'selected' : '' %>>China</option>
+                    <option value="EUA" <%= produto.origem === 'EUA' ? 'selected' : '' %>>EUA</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="foto">Foto:</label>
+                  <input type="file" id="foto" name="foto" multiple>
+                </div>
+                <div class="form-group">
+                  <label for="estoque">Estoque:</label>
+                  <input type="number" id="estoque" name="estoque" value="<%= produto.estoque %>" required>
+                </div>
+
+                <button type="submit" class="btn btn-warning btn-block">Salvar</button>
+              </form>
+
+              <!-- Botão para deletar produto -->
+              <form action="/painelVendedor/deletar-produto/<%= produto.id %>" method="POST">
+                <button type="submit" class="btn btn-danger btn-block">Deletar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
