@@ -14,6 +14,8 @@
   var loginRouter = require('./routes/login');
   var logoutRouter = require('./routes/logout');
   var cadastrarProdutoRouter = require('./routes/cadastrarproduto');
+  var produtosRouter = require('./routes/produtos');
+
 
   var app = express();
 
@@ -67,6 +69,8 @@
   app.use('/login', loginRouter);
   app.use('/logout', logoutRouter);
   app.use('/cadastrarProduto',vendedorMiddleware, cadastrarProdutoRouter);
+  app.use('/produtos', produtosRouter);
+
 
     
 

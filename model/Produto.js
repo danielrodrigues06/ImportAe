@@ -21,7 +21,7 @@ const Produto = sequelize.define("Produto", {
     allowNull: false,
   },
   fotos: {
-    type: DataTypes.JSON, // Alterado para JSON para suportar arrays
+    type: DataTypes.JSON,
     allowNull: false,
   },
   categoria: {
@@ -30,7 +30,7 @@ const Produto = sequelize.define("Produto", {
   },
   origem: {
     type: DataTypes.ENUM,
-    values: ['China', 'EUA'],
+    values: ["China", "EUA"],
     allowNull: false,
   },
   vendedorId: {
@@ -44,6 +44,6 @@ const Produto = sequelize.define("Produto", {
 });
 
 Usuario.hasMany(Produto, { foreignKey: "vendedorId" });
-Produto.belongsTo(Usuario, { foreignKey: "vendedorId" });
+Produto.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedor" }); // Assegure que o alias é "vendedor"
 
 module.exports = Produto;
