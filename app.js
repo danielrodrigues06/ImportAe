@@ -18,7 +18,7 @@ const cadastrarProdutoRouter = require("./routes/cadastrarproduto");
 const produtosRouter = require("./routes/produtos");
 const painelvendedorRouter = require("./routes/painelvendedor");
 const comprarRouter = require("./routes/comprar");
-
+const painelclienteRouter = require("./routes/painelcliente");
 
 const app = express();
 
@@ -67,6 +67,14 @@ function vendedorMiddleware(req, res, next) {
   res.status(403).send("Acesso negado: apenas vendedores podem acessar esta rota.");
 }
 
+// Middleware específico para clientes
+function clienteMiddleware(req, res, next) {
+  if (req.isAuthenticated() && req.user.tipo === 'cliente') {
+    return next();
+  }
+  res.status(403).send("Acesso negado: apenas clientes podem acessar esta rota.");
+}
+
 // Aplicação das rotas com middlewares
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -77,6 +85,7 @@ app.use("/cadastrarProduto", authenticationMiddleware, vendedorMiddleware, cadas
 app.use("/produtos", produtosRouter);
 app.use("/painelvendedor", authenticationMiddleware, vendedorMiddleware, painelvendedorRouter);
 app.use('/comprar', authenticationMiddleware, comprarRouter);
+app.use('/painelcliente', authenticationMiddleware, clienteMiddleware, painelclienteRouter);
 
 // Sincronização com o banco de dados
 sequelize

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Cliente</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Editar Perfil</h2>
+        <form action="/painelCliente/editar-perfil" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="<%= cliente.nome %>" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= cliente.email %>" required>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" class="form-control" id="telefone" name="telefone" value="<%= cliente.telefone %>" required>
+            </div>
+            <div class="form-group">
+                <label for="fotoPerfil">Foto de Perfil</label>
+                <input type="file" class="form-control-file" id="fotoPerfil" name="fotoPerfil">
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        </form>
+
+        <h2 class="mt-5">Compras Feitas</h2>
+        <div class="list-group">
+            <% compras.forEach(function(compra) { %>
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><%= compra.produto.nome %></h5>
+                        <small>Data da Compra: <%= compra.dataCompra %></small>
+                    </div>
+                    <p class="mb-1">Preço: <%= compra.produto.preco %></p>
+                    <small>Status: <%= compra.status %></small>
+                </a>
+            <% }); %>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
