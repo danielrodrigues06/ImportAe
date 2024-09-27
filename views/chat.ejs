@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Privado</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #mensagensContainer {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        .mensagem {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Chat Privado</h1>
+        <div class="form-group">
+            <label for="destinatarioId">Escolha um destinatário:</label>
+            <select id="destinatarioId" class="form-control" onchange="carregarMensagens()">
+                <% usuarios.forEach(usuario => { %>
+                    <option value="<%= usuario.id %>"><%= usuario.nome %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div id="mensagensContainer" class="mb-3"></div>
+        <textarea id="mensagemTexto" class="form-control mb-3" placeholder="Digite sua mensagem aqui..."></textarea>
+        <button onclick="enviarMensagem()" class="btn btn-primary">Enviar</button>
+    </div>
+    <script>
+        async function carregarMensagens() {
+            const destinatarioId = document.getElementById('destinatarioId').value;
+            const response = await fetch(`/chat/mensagens/${destinatarioId}`);
+            if (response.ok) {
+                const mensagens = await response.json();
+                let mensagensHtml = '';
+                mensagens.forEach(mensagem => {
+                    mensagensHtml += `<div class="mensagem">
+                        <p><strong>${mensagem.Usuario.nome}:</strong> ${mensagem.texto}</p>
+                        <p class="data">${new Date(mensagem.createdAt).toLocaleString()}</p>
+                    </div>`;
+                });
+                document.getElementById('mensagensContainer').innerHTML = mensagensHtml;
+            } else {
+                console.error('Erro ao carregar mensagens');
+            }
+        }
+
+        async function enviarMensagem() {
+            const texto = document.getElementById('mensagemTexto').value;
+            const destinatarioId = document.getElementById('destinatarioId').value;
+
+            if (!texto || !destinatarioId) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            const response = await fetch('/chat/enviar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ texto, destinatarioId }),
+            });
+            if (response.ok) {
+                document.getElementById('mensagemTexto').value = ''; // Limpa o campo de texto
+                carregarMensagens(); // Recarrega as mensagens
+            } else {
+                alert('Falha ao enviar mensagem.');
+            }
+        }
+
+        // Chama carregarMensagens a cada segundo
+        setInterval(carregarMensagens, 1000); // 1000 ms = 1 segundo
+
+        document.addEventListener('DOMContentLoaded', carregarMensagens);
+    </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

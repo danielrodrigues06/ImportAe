@@ -19,7 +19,7 @@ const produtosRouter = require("./routes/produtos");
 const painelvendedorRouter = require("./routes/painelvendedor");
 const comprarRouter = require("./routes/comprar");
 const painelclienteRouter = require("./routes/painelcliente");
-
+const chatRouter = require('./routes/chat');
 const app = express();
 
 require("./auth")(passport);
@@ -44,6 +44,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(flash());
 
 // Middleware de autenticação
@@ -86,6 +87,7 @@ app.use("/produtos", produtosRouter);
 app.use("/painelvendedor", authenticationMiddleware, vendedorMiddleware, painelvendedorRouter);
 app.use('/comprar', authenticationMiddleware, comprarRouter);
 app.use('/painelcliente', authenticationMiddleware, clienteMiddleware, painelclienteRouter);
+app.use('/chat', authenticationMiddleware, chatRouter);
 
 // Sincronização com o banco de dados
 sequelize
