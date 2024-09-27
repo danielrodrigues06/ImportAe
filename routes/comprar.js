@@ -1,39 +1,57 @@
-
 const express = require('express');
 const router = express.Router();
-const Usuario = require('../model/Usuario'); // Importe o modelo Usuario
+const Usuario = require('../model/Usuario');
 const Compra = require('../model/Compra');
 const Produto = require('../model/Produto');
 
 router.get('/:id', async (req, res) => {
-    const produto = await Produto.findByPk(req.params.id, {
-        include: [{ model: Usuario, as: 'vendedor' }], // Inclua o vendedor na busca
-        attributes: ['id', 'nome', 'descricao', 'preco', 'fotos'] // Inclua o campo 'fotos' na busca
-    });
-    
+    try {
+        const produto = await Produto.findByPk(req.params.id, {
+            include: [{ model: Usuario, as: 'vendedor' }],
+            attributes: ['id', 'nome', 'descricao', 'preco', 'fotos', 'estoque']
+        });
+
+        if (!produto) {
+            return res.status(404).send('Produto não encontrado');
+        }
+
+        if (produto.estoque === 0) {
+            return res.status(400).send('Produto indisponível para compra');
+        }
+
+        const fotos = Array.isArray(produto.fotos) ? produto.fotos : [];
+
+        res.render('comprar', { produto, vendedor: produto.vendedor, fotos });
+    } catch (error) {
+        console.error('Erro ao buscar produto:', error);
+        res.status(500).send('Erro ao buscar produto');
+    }
+});
+
+router.post('/:id', async (req, res) => {
+    const { nomeCompleto, cpf, endereco, formaPagamento, quantidade } = req.body;
+    const produto = await Produto.findByPk(req.params.id);
+
     if (!produto) {
-        // Se o produto não foi encontrado, retorne um erro
         return res.status(404).send('Produto não encontrado');
     }
 
-    // Renderiza a página de compra com os detalhes do produto e do vendedor
-    res.render('comprar', { produto, vendedor: produto.vendedor });
-});
+    if (produto.estoque < quantidade) {
+        return res.status(400).send('Quantidade insuficiente no estoque');
+    }
 
-router.post('/comprar/:id', async (req, res) => {
-    const { nomeCompleto, cpf, endereco, formaPagamento } = req.body;
-    const produto = await Produto.findByPk(req.params.id);
-    
-    // Cria uma nova compra
     const novaCompra = await Compra.create({
         nomeCompleto,
         cpf,
         endereco,
         formaPagamento,
         produtoId: produto.id,
-        clienteId: req.user.id, // Supondo que o usuário esteja autenticado e seu ID esteja disponível em req.user.id
-        vendedorId: produto.vendedorId, // O vendedorId é obtido do produto
+        clienteId: req.user.id,
+        vendedorId: produto.vendedorId,
     });
+
+    produto.estoque -= quantidade;
+    await produto.save();
 
     res.redirect('/produtos');
 });

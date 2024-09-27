@@ -6,14 +6,44 @@
     <title>Compra de Produto</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .carousel-item img {
+            max-height: 400px; /* Ajuste a altura máxima da imagem */
+            object-fit: cover; /* Ajuste a imagem para cobrir o espaço disponível */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <h1>Você está comprando <%= produto.nome %></h1>
-                <img src="/imagens/<%= produto.fotos %>" alt="<%= produto.nome %>" class="img-fluid">
+
+                <!-- Exibindo as fotos do produto -->
+                <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+                            </div>
+                        <% }); %>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+
                 <p class="mt-2">Preço: <%= produto.preco %></p>
+                <p class="mt-2">Estoque disponível: <%= produto.estoque %></p>
+
+                <% if (typeof erro !== 'undefined') { %>
+                    <div class="alert alert-danger"><%= erro %></div>
+                <% } %>
 
                 <form action="/comprar/<%= produto.id %>" method="POST">
                     <div class="form-group">
@@ -38,6 +68,11 @@
                             <option value="cartao">Cartão</option>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade:</label>
+                        <input type="number" id="quantidade" name="quantidade" class="form-control" required min="1" max="<%= produto.estoque %>">
+                    </div>
                     
                     <button type="submit" class="btn btn-primary">Comprar</button>
                 </form>
@@ -46,6 +81,8 @@
     </div>
 
     <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>

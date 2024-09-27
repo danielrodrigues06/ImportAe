@@ -1,8 +1,8 @@
-// routes/painelVendedor.js
 const express = require("express");
 const router = express.Router();
 const Produto = require("../model/Produto");
 const Usuario = require("../model/Usuario");
+const Compra = require("../model/Compra");
 const path = require('path');
 const multer = require('multer');
 
@@ -17,12 +17,27 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Painel do vendedor - mostra perfil e produtos
+// Painel do vendedor - mostra perfil, produtos e compras
 router.get("/", async (req, res) => {
   try {
     const vendedor = await Usuario.findByPk(req.user.id);
     const produtos = await Produto.findAll({ where: { vendedorId: req.user.id } });
-    res.render("painelVendedor", { vendedor, produtos });
+    const compras = await Compra.findAll({
+      where: { vendedorId: req.user.id },
+      include: [
+        {
+          model: Produto,
+          as: 'produto',
+          attributes: ['nome', 'preco']
+        },
+        {
+          model: Usuario,
+          as: 'cliente',
+          attributes: ['nome', 'email']
+        }
+      ]
+    });
+    res.render("painelVendedor", { vendedor, produtos, compras });
   } catch (error) {
     console.error("Erro ao carregar o painel do vendedor:", error);
     res.status(500).send("Erro ao carregar o painel do vendedor.");
@@ -51,24 +66,18 @@ router.post("/editar-produto/:id", upload.array('foto', 5), async (req, res) => 
   const { id } = req.params;
   const { nome, descricao, preco, categoria, origem, estoque } = req.body;
 
-  // Verifica se pelo menos 3 fotos foram enviadas
-  if (req.files.length < 3) {
-    return res.status(400).send("Por favor, envie pelo menos 3 fotos.");
-  }
-
   try {
-    const fotosArray = req.files.map(file => file.filename); // Captura os nomes dos arquivos enviados
+    const updateData = { nome, descricao, preco, categoria, origem, estoque };
 
-    await Produto.update({
-      nome,
-      descricao,
-      preco,
-      fotos: fotosArray,
-      categoria,
-      origem,
-      estoque,
-      vendedorId: req.user.id,
-    }, { where: { id } });
+    if (req.files.length > 0) {
+      if (req.files.length < 3) {
+        return res.status(400).send("Por favor, envie pelo menos 3 fotos.");
+      }
+      const fotosArray = req.files.map(file => file.filename); // Captura os nomes dos arquivos enviados
+      updateData.fotos = fotosArray;
+    }
+
+    await Produto.update(updateData, { where: { id, vendedorId: req.user.id } });
 
     res.redirect("/painelVendedor");
   } catch (error) {
@@ -76,7 +85,6 @@ router.post("/editar-produto/:id", upload.array('foto', 5), async (req, res) => 
     res.status(500).send("Erro ao editar o produto.");
   }
 });
-
 
 // Deletar produto do vendedor
 router.post("/deletar-produto/:id", async (req, res) => {
