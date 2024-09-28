@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
         {
           model: Usuario,
           as: "vendedor", // Use o alias "vendedor" configurado no model
-          attributes: ["nome", "fotoPerfil"], // Atributos do vendedor que queremos mostrar
+          attributes: ["id", "nome", "fotoPerfil"], // Atributos do vendedor que queremos mostrar
         },
       ],
       attributes: ["id", "nome", "descricao", "preco", "fotos", "estoque"], // Inclua o atributo estoque

@@ -106,6 +106,7 @@
       <% }); %>
     </div>
 
+  
     <!-- Lista de compras -->
     <h2 class="mb-4">Compras dos seus produtos</h2>
     <table class="table table-striped">
@@ -115,25 +116,21 @@
           <th>Preço</th>
           <th>Cliente</th>
           <th>Email do Cliente</th>
-          <th>Nome Completo</th>
-          <th>CPF</th>
-          <th>Endereço</th>
-          <th>Forma de Pagamento</th>
+          <th>Ações</th> <!-- Nova coluna para ações -->
         </tr>
       </thead>
       <tbody>
         <% compras.forEach(compra => { %>
           <tr>
             <td><%= compra.produto.nome %></td>
-            <td><%= compra.produto.preco %></td>
+            <td>R$<%= compra.produto.preco %></td>
             <td><%= compra.cliente.nome %></td>
             <td><%= compra.cliente.email %></td>
-            <td><%= compra.nomeCompleto %></td>
-            <td><%= compra.cpf %></td>
-            <td><%= compra.endereco %></td>
-            <td><%= compra.formaPagamento %></td>
+            <td>
+              <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
+            </td>
           </tr>
-        <% }) %>
+        <% }); %>
       </tbody>
     </table>
   </div>

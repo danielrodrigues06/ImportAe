@@ -17,34 +17,64 @@
         .mensagem {
             margin-bottom: 10px;
         }
+        #chatsRecentes {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        .perfil-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <h1>Chat Privado</h1>
-        <div class="form-group">
-            <label for="destinatarioId">Escolha um destinatário:</label>
-            <select id="destinatarioId" class="form-control" onchange="carregarMensagens()">
-                <% usuarios.forEach(usuario => { %>
-                    <option value="<%= usuario.id %>"><%= usuario.nome %></option>
-                <% }); %>
-            </select>
+        <div class="row">
+            <!-- Aba lateral com chats recentes -->
+            <div class="col-md-3">
+                <h4>Chats Recentes</h4>
+                <div id="chatsRecentes">
+                    <% chatsRecentes.forEach(chat => { %>
+                        <div class="chat-recent">
+                            <a href="/chat?destinatarioId=<%= chat.usuarioId === usuario.id ? chat.destinatarioId : chat.usuarioId %>">
+                                <img src="/imagens/<%= chat.usuarioId === usuario.id ? chat.destinatario.fotoPerfil : chat.usuario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
+                                <%= chat.usuarioId === usuario.id ? (chat.destinatario ? chat.destinatario.nome : 'Desconhecido') : (chat.usuario ? chat.usuario.nome : 'Desconhecido') %>
+                            </a>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/imagens/<%= destinatario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img mr-3">
+                    <h4><%= destinatario.nome %></h4>
+                </div>
+                <div id="mensagensContainer" class="mb-3"></div>
+                <textarea id="mensagemTexto" class="form-control mb-3" placeholder="Digite sua mensagem aqui..."></textarea>
+                <input type="file" id="imagem" class="form-control mb-3">
+                <button onclick="enviarMensagem()" class="btn btn-primary">Enviar</button>
+            </div>
         </div>
-        <div id="mensagensContainer" class="mb-3"></div>
-        <textarea id="mensagemTexto" class="form-control mb-3" placeholder="Digite sua mensagem aqui..."></textarea>
-        <button onclick="enviarMensagem()" class="btn btn-primary">Enviar</button>
     </div>
     <script>
         async function carregarMensagens() {
-            const destinatarioId = document.getElementById('destinatarioId').value;
+            const destinatarioId = '<%= destinatario.id %>';
             const response = await fetch(`/chat/mensagens/${destinatarioId}`);
             if (response.ok) {
                 const mensagens = await response.json();
                 let mensagensHtml = '';
                 mensagens.forEach(mensagem => {
                     mensagensHtml += `<div class="mensagem">
-                        <p><strong>${mensagem.Usuario.nome}:</strong> ${mensagem.texto}</p>
-                        <p class="data">${new Date(mensagem.createdAt).toLocaleString()}</p>
+                        <p><strong>${mensagem.remetente.nome}:</strong> ${mensagem.texto}</p>`;
+                    if (mensagem.imagem) {
+                        mensagensHtml += `<img src="/imagens/${mensagem.imagem}" alt="Imagem" class="img-fluid">`;
+                    }
+                    mensagensHtml += `<p class="data">${new Date(mensagem.createdAt).toLocaleString()}</p>
                     </div>`;
                 });
                 document.getElementById('mensagensContainer').innerHTML = mensagensHtml;
@@ -55,22 +85,28 @@
 
         async function enviarMensagem() {
             const texto = document.getElementById('mensagemTexto').value;
-            const destinatarioId = document.getElementById('destinatarioId').value;
+            const destinatarioId = '<%= destinatario.id %>';
+            const imagemInput = document.getElementById('imagem');
+            const formData = new FormData();
 
-            if (!texto || !destinatarioId) {
+            formData.append('texto', texto);
+            formData.append('destinatarioId', destinatarioId);
+            if (imagemInput.files.length > 0) {
+                formData.append('imagem', imagemInput.files[0]);
+            }
+
+            if (!texto && imagemInput.files.length === 0) {
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
 
             const response = await fetch('/chat/enviar', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ texto, destinatarioId }),
+                body: formData,
             });
             if (response.ok) {
                 document.getElementById('mensagemTexto').value = ''; // Limpa o campo de texto
+                document.getElementById('imagem').value = ''; // Limpa o campo de imagem
                 carregarMensagens(); // Recarrega as mensagens
             } else {
                 alert('Falha ao enviar mensagem.');

@@ -10,7 +10,7 @@ const Mensagem = sequelize.define('Mensagem', {
     },
     texto: {
         type: DataTypes.TEXT,
-        allowNull: false  // Certifique-se de que o campo texto não seja nulo
+        allowNull: true  // Permitir que o campo texto seja nulo
     },
     usuarioId: {
         type: DataTypes.INTEGER,
@@ -31,10 +31,16 @@ const Mensagem = sequelize.define('Mensagem', {
             model: Usuario,
             key: 'id'
         }
+    },
+    imagem: {
+        type: DataTypes.STRING,
+        allowNull: true  // Permitir que o campo imagem seja nulo
     }
 });
 
-Usuario.hasMany(Mensagem, { foreignKey: 'usuarioId' });
-Mensagem.belongsTo(Usuario, { foreignKey: 'usuarioId' });
+Usuario.hasMany(Mensagem, { foreignKey: 'usuarioId', as: 'mensagensEnviadas' });
+Usuario.hasMany(Mensagem, { foreignKey: 'destinatarioId', as: 'mensagensRecebidas' });
+Mensagem.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'remetente' });
+Mensagem.belongsTo(Usuario, { foreignKey: 'destinatarioId', as: 'destinatario' });
 
 module.exports = Mensagem;

@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
         {
           model: Usuario,
           as: 'cliente',
-          attributes: ['nome', 'email']
+          attributes: ['id', 'nome', 'email'] // Inclua o atributo 'id' do cliente
         }
       ]
     });
