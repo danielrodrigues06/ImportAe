@@ -29,6 +29,31 @@
             border-radius: 50%;
             object-fit: cover;
         }
+        .img-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .img-expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            z-index: 1050;
+            cursor: pointer;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+        }
     </style>
 </head>
 <body>
@@ -42,8 +67,16 @@
                     <% chatsRecentes.forEach(chat => { %>
                         <div class="chat-recent">
                             <a href="/chat?destinatarioId=<%= chat.usuarioId === usuario.id ? chat.destinatarioId : chat.usuarioId %>">
-                                <img src="/imagens/<%= chat.usuarioId === usuario.id ? chat.destinatario.fotoPerfil : chat.usuario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
-                                <%= chat.usuarioId === usuario.id ? (chat.destinatario ? chat.destinatario.nome : 'Desconhecido') : (chat.usuario ? chat.usuario.nome : 'Desconhecido') %>
+                                <% if (chat.usuarioId === usuario.id && chat.destinatario) { %>
+                                    <img src="/imagens/<%= chat.destinatario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
+                                    <%= chat.destinatario.nome %>
+                                <% } else if (chat.usuario && chat.usuario.fotoPerfil) { %>
+                                    <img src="/imagens/<%= chat.usuario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
+                                    <%= chat.usuario.nome %>
+                                <% } else { %>
+                                    <img src="/imagens/default.png" alt="Foto de Perfil" class="perfil-img">
+                                    Desconhecido
+                                <% } %>
                             </a>
                         </div>
                     <% }); %>
@@ -72,7 +105,7 @@
                     mensagensHtml += `<div class="mensagem">
                         <p><strong>${mensagem.remetente.nome}:</strong> ${mensagem.texto}</p>`;
                     if (mensagem.imagem) {
-                        mensagensHtml += `<img src="/imagens/${mensagem.imagem}" alt="Imagem" class="img-fluid">`;
+                        mensagensHtml += `<img src="/imagens/${mensagem.imagem}" alt="Imagem" class="img-thumbnail" onclick="expandirImagem(this)">`;
                     }
                     mensagensHtml += `<p class="data">${new Date(mensagem.createdAt).toLocaleString()}</p>
                     </div>`;
@@ -111,6 +144,26 @@
             } else {
                 alert('Falha ao enviar mensagem.');
             }
+        }
+
+        function expandirImagem(img) {
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.onclick = () => {
+                document.body.removeChild(overlay);
+                document.body.removeChild(expandedImg);
+            };
+
+            const expandedImg = document.createElement('img');
+            expandedImg.src = img.src;
+            expandedImg.className = 'img-expanded';
+            expandedImg.onclick = () => {
+                document.body.removeChild(overlay);
+                document.body.removeChild(expandedImg);
+            };
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(expandedImg);
         }
 
         // Chama carregarMensagens a cada segundo

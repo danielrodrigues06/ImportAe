@@ -39,6 +39,9 @@
                     </div>
                     <p class="mb-1">Preço: <%= compra.produto.preco %></p>
                     <small>Status: <%= compra.status %></small>
+                    <div class="mt-2">
+                        <button onclick="window.location.href='/chat?destinatarioId=<%= compra.vendedorId %>'" class="btn btn-info">Conversar com Vendedor</button>
+                    </div>
                 </a>
             <% }); %>
         </div>

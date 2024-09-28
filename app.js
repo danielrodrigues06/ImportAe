@@ -50,9 +50,14 @@ app.use(flash());
 // Middleware de autenticação
 function authenticationMiddleware(req, res, next) {
   if (req.isAuthenticated()) {
+    res.locals.isAuthenticated = true;
+    res.locals.user = req.user;
     res.locals.logado = true;
     return next();
   }
+  res.locals.isAuthenticated = false;
+  res.locals.user = null;
+  res.locals.logado = false;
   // Permite acesso à rota de login sem redirecionar novamente
   if (req.path === "/login") return next();
 

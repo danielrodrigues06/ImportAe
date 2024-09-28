@@ -1,4 +1,3 @@
-// models/Compra.js
 const sequelize = require("../db.js");
 const { DataTypes } = require("sequelize");
 const Usuario = require("./Usuario");
@@ -49,6 +48,19 @@ const Compra = sequelize.define("Compra", {
       model: Usuario,
       key: "id",
     },
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM,
+    values: [
+      "aguardando pagamento",
+      "pago",
+      "aguardando fotos",
+      "fotos enviadas",
+      "enviado",
+      "entregue"
+    ],
+    defaultValue: "aguardando pagamento",
     allowNull: false,
   },
 });

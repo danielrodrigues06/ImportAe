@@ -19,7 +19,7 @@
         <form action="/painelVendedor/editar-perfil" method="POST" enctype="multipart/form-data">          
           <div class="form-group">
             <label for="fotoPerfil">Foto do Perfil</label>
-            <img src="/imagens/<%= vendedor.fotoPerfil %>" alt="Foto do Perfil" class="img-thumbnail">
+            <img src="/imagens/<%= vendedor.fotoPerfil %>" alt="Foto do Perfil" class="img-thumbnail" style="width: 150px; height: 150px;">
             <input type="file" id="fotoPerfil" name="fotoPerfil">
           </div>
           <div class="form-group">
@@ -126,6 +126,21 @@
             <td>R$<%= compra.produto.preco %></td>
             <td><%= compra.cliente.nome %></td>
             <td><%= compra.cliente.email %></td>
+            <td>
+              <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
+                <select name="status" class="form-control">
+                  <option value="aguardando pagamento" <%= compra.status === 'aguardando pagamento' ? 'selected' : '' %>>Aguardando Pagamento</option>
+                  <option value="pago" <%= compra.status === 'pago' ? 'selected' : '' %>>Pago</option>
+                  <option value="aguardando fotos" <%= compra.status === 'aguardando fotos' ? 'selected' : '' %>>Aguardando Fotos</option>
+                  <option value="fotos enviadas" <%= compra.status === 'fotos enviadas' ? 'selected' : '' %>>Fotos Enviadas</option>
+                  <option value="aguardando aprovação" <%= compra.status === 'aguardando aprovação' ? 'selected' : '' %>>Aguardando Aprovação</option>
+                  <option value="aprovado pelo cliente" <%= compra.status === 'aprovado pelo cliente' ? 'selected' : '' %>>Aprovado pelo Cliente</option>
+                  <option value="enviado" <%= compra.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
+                  <option value="entregue" <%= compra.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Atualizar Status</button>
+              </form>
+            </td>
             <td>
               <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
             </td>

@@ -98,4 +98,25 @@ router.post("/deletar-produto/:id", async (req, res) => {
   }
 });
 
+// Atualizar status da compra
+router.post("/atualizar-status/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const compra = await Compra.findByPk(id);
+    if (!compra || compra.vendedorId !== req.user.id) {
+      return res.status(404).send("Compra não encontrada ou acesso negado.");
+    }
+
+    compra.status = status;
+    await compra.save();
+
+    res.redirect("/painelVendedor");
+  } catch (error) {
+    console.error("Erro ao atualizar status da compra:", error);
+    res.status(500).send("Erro ao atualizar status da compra.");
+  }
+});
+
 module.exports = router;
