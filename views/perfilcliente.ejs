@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Cliente</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <img src="/imagens/<%= cliente.fotoPerfil || 'default.png' %>" alt="Foto do Cliente" class="img-fluid rounded-circle" width="100">
+              <div class="ml-3">
+                <h3><%= cliente.nome %></h3>
+                <p>Número de Compras: <%= numeroCompras %></p>
+                <p>Na plataforma desde: <%= mesAnoCriacao %></p>
+              </div>
+            </div>
+            <div class="mt-4">
+              <h4>Nota Média</h4>
+              <p><%= notaMedia %>/5 estrelas</p>
+            </div>
+          </div>
+        </div>
+        <% if (ultimaAvaliacao) { %>
+          <div class="card mb-4">
+            <div class="card-body">
+              <h4>Última Avaliação Recebida</h4>
+              <div class="media mb-3">
+                <img src="/imagens/<%= ultimaAvaliacao.vendedorAvaliacao.fotoPerfil || 'default.png' %>" alt="Foto do Vendedor" class="mr-3 img-fluid rounded-circle" width="50">
+                <div class="media-body">
+                  <h5 class="mt-0"><%= ultimaAvaliacao.vendedorAvaliacao.nome %></h5>
+                  <p>Nota: <%= ultimaAvaliacao.nota %>/5</p>
+                  <p><%= ultimaAvaliacao.comentario %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="card mb-4">
+            <div class="card-body">
+              <p>Esse cliente ainda não recebeu avaliações.</p>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
