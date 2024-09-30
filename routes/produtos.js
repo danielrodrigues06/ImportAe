@@ -42,6 +42,13 @@ router.get("/", async (req, res) => {
       attributes: ["id", "nome", "descricao", "preco", "fotos", "estoque"], // Inclua o atributo estoque
     });
 
+    // Calcular a nota média do vendedor para cada produto
+    for (const produto of produtos) {
+      if (produto.vendedor) {
+        produto.vendedor.notaMedia = await produto.vendedor.getNotaMedia();
+      }
+    }
+
     // Renderizando a view de produtos com os dados obtidos
     res.render("produtos", { produtos });
   } catch (error) {
