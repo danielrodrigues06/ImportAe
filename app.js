@@ -8,6 +8,7 @@ const session = require("express-session");
 const createError = require('http-errors');
 const flash = require("connect-flash");
 const sequelize = require("./db");
+const associations = require('./model/associations'); // Importando associações
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -20,6 +21,8 @@ const painelvendedorRouter = require("./routes/painelvendedor");
 const comprarRouter = require("./routes/comprar");
 const painelclienteRouter = require("./routes/painelcliente");
 const chatRouter = require('./routes/chat');
+const avaliacaoRouter = require('./routes/avaliacao');
+
 const app = express();
 
 require("./auth")(passport);
@@ -93,6 +96,7 @@ app.use("/painelvendedor", authenticationMiddleware, vendedorMiddleware, painelv
 app.use('/comprar', authenticationMiddleware, comprarRouter);
 app.use('/painelcliente', authenticationMiddleware, clienteMiddleware, painelclienteRouter);
 app.use('/chat', authenticationMiddleware, chatRouter);
+app.use('/avaliacao', authenticationMiddleware, avaliacaoRouter);
 
 // Sincronização com o banco de dados
 sequelize

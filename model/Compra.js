@@ -1,7 +1,5 @@
 const sequelize = require("../db.js");
 const { DataTypes } = require("sequelize");
-const Usuario = require("./Usuario");
-const Produto = require("./Produto");
 
 const Compra = sequelize.define("Compra", {
   id: {
@@ -29,7 +27,7 @@ const Compra = sequelize.define("Compra", {
   clienteId: {
     type: DataTypes.INTEGER,
     references: {
-      model: Usuario,
+      model: "Usuarios",
       key: "id",
     },
     allowNull: false,
@@ -37,7 +35,7 @@ const Compra = sequelize.define("Compra", {
   produtoId: {
     type: DataTypes.INTEGER,
     references: {
-      model: Produto,
+      model: "Produtos",
       key: "id",
     },
     allowNull: false,
@@ -45,7 +43,7 @@ const Compra = sequelize.define("Compra", {
   vendedorId: {
     type: DataTypes.INTEGER,
     references: {
-      model: Usuario,
+      model: "Usuarios",
       key: "id",
     },
     allowNull: false,
@@ -64,14 +62,5 @@ const Compra = sequelize.define("Compra", {
     allowNull: false,
   },
 });
-
-Usuario.hasMany(Compra, { foreignKey: "clienteId" });
-Compra.belongsTo(Usuario, { foreignKey: "clienteId", as: "cliente" });
-
-Produto.hasMany(Compra, { foreignKey: "produtoId" });
-Compra.belongsTo(Produto, { foreignKey: "produtoId", as: "produto" });
-
-Usuario.hasMany(Compra, { foreignKey: "vendedorId" });
-Compra.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedor" });
 
 module.exports = Compra;

@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Usuario = require("../model/Usuario");
-const Produto = require('../model/Produto'); // Ajuste o caminho conforme necessário
+const Produto = require('../model/Produto');
 const Compra = require("../model/Compra");
+const Avaliacao = require("../model/Avaliacao");
 const path = require('path');
 const multer = require('multer');
 
@@ -12,7 +13,7 @@ const storage = multer.diskStorage({
     cb(null, 'public/imagens/');
   },
   filename: function(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Adicionando a extensão do arquivo original
+    cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
@@ -28,7 +29,13 @@ router.get("/", async (req, res) => {
         {
           model: Produto,
           as: 'produto',
-          attributes: ['nome', 'preco', 'fotos'] // Supondo que 'fotos' seja um campo do produto
+          attributes: ['nome', 'preco', 'fotos']
+        },
+        {
+          model: Avaliacao,
+          as: 'avaliacoes',
+          required: false,
+          where: { clienteId: req.user.id }
         }
       ]
     });
@@ -47,7 +54,7 @@ router.post("/editar-perfil", upload.single('fotoPerfil'), async (req, res) => {
     const updateData = { nome, email, telefone };
 
     if (fotoPerfil) {
-      updateData.fotoPerfil = fotoPerfil; // Atualiza a foto de perfil se uma nova foi enviada
+      updateData.fotoPerfil = fotoPerfil;
     }
 
     await Usuario.update(updateData, { where: { id: req.user.id } });

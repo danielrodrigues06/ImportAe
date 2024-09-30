@@ -41,8 +41,53 @@
                     <small>Status: <%= compra.status %></small>
                     <div class="mt-2">
                         <button onclick="window.location.href='/chat?destinatarioId=<%= compra.vendedorId %>'" class="btn btn-info">Conversar com Vendedor</button>
+                        <% if (!compra.avaliacoes.length) { %>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#avaliacaoModal<%= compra.id %>">Avaliar Vendedor</button>
+                        <% } else { %>
+                            <button class="btn btn-secondary" disabled>Avaliação Enviada</button>
+                        <% } %>
                     </div>
                 </a>
+
+                <!-- Modal de Avaliação -->
+                <div class="modal fade" id="avaliacaoModal<%= compra.id %>" tabindex="-1" role="dialog" aria-labelledby="avaliacaoModalLabel<%= compra.id %>" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="avaliacaoModalLabel<%= compra.id %>">Avaliar Vendedor</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="/avaliacao/<%= compra.id %>" method="POST" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="nota">Nota</label>
+                                        <select class="form-control" id="nota" name="nota" required>
+                                            <option value="1">1 Estrela</option>
+                                            <option value="2">2 Estrelas</option>
+                                            <option value="3">3 Estrelas</option>
+                                            <option value="4">4 Estrelas</option>
+                                            <option value="5">5 Estrelas</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="comentario">Comentário</label>
+                                        <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fotos">Fotos</label>
+                                        <input type="file" class="form-control-file" id="fotos" name="fotos" multiple>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                    <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             <% }); %>
         </div>
     </div>
