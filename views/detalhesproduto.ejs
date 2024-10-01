@@ -51,6 +51,21 @@
                 <h5 class="mt-0"><%= comentario.usuario.nome %></h5>
                 <p><%= comentario.comentario %></p>
                 <small class="text-muted"><%= new Date(comentario.createdAt).toLocaleString() %></small>
+                <% if (comentario.resposta) { %>
+                  <div class="ml-4 mt-2">
+                    <h6>Resposta do Vendedor:</h6>
+                    <p><%= comentario.resposta %></p>
+                  </div>
+                <% } %>
+                <% if (user && user.id === produto.vendedorProduto.id) { %>
+                  <form action="/comentarios/responder/<%= comentario.id %>" method="POST" class="mt-2">
+                    <div class="form-group">
+                      <label for="resposta<%= comentario.id %>">Responder:</label>
+                      <textarea class="form-control" id="resposta<%= comentario.id %>" name="resposta" rows="2" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Enviar Resposta</button>
+                  </form>
+                <% } %>
               </div>
             </div>
           <% }); %>

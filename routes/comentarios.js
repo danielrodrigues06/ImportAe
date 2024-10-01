@@ -23,4 +23,33 @@ router.post('/:produtoId', async (req, res) => {
   }
 });
 
+// Rota para responder a um comentário
+router.post('/responder/:comentarioId', async (req, res) => {
+  const { resposta } = req.body;
+  const { comentarioId } = req.params;
+  const usuarioId = req.user.id;
+
+  try {
+    const comentario = await Comentario.findByPk(comentarioId, {
+      include: [{ model: Produto, as: 'produto' }]
+    });
+
+    if (!comentario) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    if (comentario.produto.vendedorId !== usuarioId) {
+      return res.status(403).send('Acesso negado: apenas o vendedor pode responder a este comentário');
+    }
+
+    comentario.resposta = resposta;
+    await comentario.save();
+
+    res.redirect(`/produtos/${comentario.produtoId}`);
+  } catch (error) {
+    console.error('Erro ao responder comentário:', error);
+    res.status(500).send('Erro ao responder comentário.');
+  }
+});
+
 module.exports = router;

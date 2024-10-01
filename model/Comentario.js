@@ -13,6 +13,10 @@ const Comentario = sequelize.define("Comentario", {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  resposta: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   usuarioId: {
     type: DataTypes.INTEGER,
     references: {
@@ -30,6 +34,5 @@ const Comentario = sequelize.define("Comentario", {
     allowNull: false,
   },
 });
-
 
 module.exports = Comentario;

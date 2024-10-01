@@ -46,7 +46,7 @@ router.get("/:id", async (req, res) => {
   try {
     const produto = await Produto.findByPk(req.params.id, {
       include: [
-        { model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] }, // Removido "createdAt"
+        { model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] },
         { model: Comentario, as: "comentarios", include: [{ model: Usuario, as: "usuario", attributes: ["id", "nome", "fotoPerfil"] }] }
       ],
     });
@@ -62,7 +62,7 @@ router.get("/:id", async (req, res) => {
     });
     const numeroAvaliacoes = await Avaliacao.count({ where: { vendedorId: produto.vendedorProduto.id, tipo: 'cliente_para_vendedor' } });
 
-    res.render("detalhesProduto", { produto, vendas, notaMedia: notaMedia.dataValues.notaMedia, numeroAvaliacoes });
+    res.render("detalhesProduto", { produto, vendas, notaMedia: notaMedia.dataValues.notaMedia, numeroAvaliacoes, user: req.user });
   } catch (error) {
     console.error("Erro ao buscar detalhes do produto:", error);
     res.status(500).send("Erro ao buscar detalhes do produto");
