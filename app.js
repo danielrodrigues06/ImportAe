@@ -23,6 +23,7 @@ const painelclienteRouter = require("./routes/painelcliente");
 const chatRouter = require('./routes/chat');
 const avaliacaoRouter = require('./routes/avaliacao');
 const perfilRouter = require('./routes/perfil');
+const comentariosRouter = require('./routes/comentarios');
 
 const app = express();
 
@@ -99,6 +100,7 @@ app.use('/painelcliente', authenticationMiddleware, clienteMiddleware, painelcli
 app.use('/chat', authenticationMiddleware, chatRouter);
 app.use('/avaliacao', authenticationMiddleware, avaliacaoRouter);
 app.use('/perfil', authenticationMiddleware, perfilRouter);
+app.use('/comentarios', authenticationMiddleware, comentariosRouter);
 
 // Sincronização com o banco de dados
 sequelize

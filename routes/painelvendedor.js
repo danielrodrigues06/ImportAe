@@ -3,6 +3,7 @@ const router = express.Router();
 const Produto = require("../model/Produto");
 const Usuario = require("../model/Usuario");
 const Compra = require("../model/Compra");
+const Avaliacao = require("../model/Avaliacao");
 const path = require('path');
 const multer = require('multer');
 
@@ -37,6 +38,20 @@ router.get("/", async (req, res) => {
         }
       ]
     });
+
+    // Verificar se já existe uma avaliação para cada compra
+    for (const compra of compras) {
+      const avaliacaoExistente = await Avaliacao.findOne({
+        where: {
+          compraId: compra.id,
+          vendedorId: req.user.id,
+          clienteId: compra.cliente.id,
+          tipo: 'vendedor_para_cliente'
+        }
+      });
+      compra.dataValues.avaliacaoExistente = !!avaliacaoExistente;
+    }
+
     res.render("painelVendedor", { vendedor, produtos, compras });
   } catch (error) {
     console.error("Erro ao carregar o painel do vendedor:", error);

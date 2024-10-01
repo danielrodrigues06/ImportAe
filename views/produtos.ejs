@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo de Produtos</title>
+  <title>Produtos</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
   <div class="container mt-5">
-    <h1 class="mb-4">Catálogo de Produtos</h1>
-    
     <div class="row">
       <!-- Barra lateral de filtros -->
       <div class="col-md-3">
@@ -73,21 +71,21 @@
                 </div>
                 <div class="card-footer">
                   <small class="text-muted">
-                    Vendido por: <a href="/perfil/vendedor/<%= produto.vendedor.id %>"><%= produto.vendedor ? produto.vendedor.nome : "Desconhecido" %></a>
-                    <% if (produto.vendedor && produto.vendedor.fotoPerfil) { %>
-                      <img src="/imagens/<%= produto.vendedor.fotoPerfil %>" alt="Foto do Vendedor" class="img-fluid rounded-circle" width="30">
+                    Vendido por: <a href="/perfil/vendedor/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto ? produto.vendedorProduto.nome : "Desconhecido" %></a>
+                    <% if (produto.vendedorProduto && produto.vendedorProduto.fotoPerfil) { %>
+                      <img src="/imagens/<%= produto.vendedorProduto.fotoPerfil %>" alt="Foto do Vendedor" class="img-fluid rounded-circle" width="30">
                     <% } %>
-                    <% if (produto.vendedor && produto.vendedor.notaMedia) { %>
-                      <p>Nota: <%= produto.vendedor.notaMedia %>/5 estrelas</p>
+                    <% if (produto.vendedorProduto && produto.vendedorProduto.notaMedia) { %>
+                      <p>Nota: <%= produto.vendedorProduto.notaMedia %>/5 estrelas</p>
                     <% } %>
                   </small>
                   <% if (produto.estoque > 0) { %>
-                    <a href="/comprar/<%= produto.id %>" class="btn btn-primary">Comprar</a>
+                    <a href="/produtos/<%= produto.id %>" class="btn btn-primary">Ver Detalhes</a>
                   <% } else { %>
                     <button class="btn btn-secondary" disabled>Indisponível</button>
                   <% } %>
-                  <% if (produto.vendedor) { %>
-                    <a href="/chat?destinatarioId=<%= produto.vendedor.id %>" class="btn btn-info">Chat com Vendedor</a>
+                  <% if (produto.vendedorProduto) { %>
+                    <a href="/chat?destinatarioId=<%= produto.vendedorProduto.id %>" class="btn btn-info">Chat com Vendedor</a>
                   <% } %>
                 </div>
               </div>

@@ -145,23 +145,27 @@
           <td>
             <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
             <!-- Formulário de Avaliação do Cliente -->
-            <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-2">
-              <div class="form-group">
-                <label for="nota<%= compra.id %>">Nota:</label>
-                <select class="form-control" id="nota<%= compra.id %>" name="nota" required>
-                  <option value="1">1 Estrela</option>
-                  <option value="2">2 Estrelas</option>
-                  <option value="3">3 Estrelas</option>
-                  <option value="4">4 Estrelas</option>
-                  <option value="5">5 Estrelas</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="comentario<%= compra.id %>">Comentário:</label>
-                <textarea class="form-control" id="comentario<%= compra.id %>" name="comentario" rows="2"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
-            </form>
+            <% if (!compra.avaliacaoExistente) { %>
+              <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-2">
+                <div class="form-group">
+                  <label for="nota<%= compra.id %>">Nota:</label>
+                  <select class="form-control" id="nota<%= compra.id %>" name="nota" required>
+                    <option value="1">1 Estrela</option>
+                    <option value="2">2 Estrelas</option>
+                    <option value="3">3 Estrelas</option>
+                    <option value="4">4 Estrelas</option>
+                    <option value="5">5 Estrelas</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="comentario<%= compra.id %>">Comentário:</label>
+                  <textarea class="form-control" id="comentario<%= compra.id %>" name="comentario" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+              </form>
+            <% } else { %>
+              <button class="btn btn-secondary mt-2" disabled>Avaliação Enviada</button>
+            <% } %>
           </td>
         </tr>
       <% }); %>

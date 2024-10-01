@@ -15,7 +15,8 @@ router.get('/vendedor/:id', async (req, res) => {
                     as: 'avaliacoesRecebidas',
                     where: { tipo: 'cliente_para_vendedor' },
                     required: false,
-                    include: [{ model: Usuario, as: 'cliente', attributes: ['id', 'nome', 'fotoPerfil'] }]
+                    include: [{ model: Usuario, as: 'cliente', attributes: ['id', 'nome', 'fotoPerfil'] }],
+                    order: [['createdAt', 'DESC']] // Ordenar por data de criação em ordem decrescente
                 },
                 {
                     model: Produto,

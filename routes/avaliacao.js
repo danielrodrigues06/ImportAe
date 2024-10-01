@@ -66,7 +66,6 @@ router.post('/vendedor/:compraId', async (req, res) => {
     }
 });
 
-// Rota para criar uma nova avaliação pelo cliente
 router.post('/:compraId', upload.array('fotos', 5), async (req, res) => {
     const { nota, comentario } = req.body;
     const { compraId } = req.params;
@@ -74,7 +73,7 @@ router.post('/:compraId', upload.array('fotos', 5), async (req, res) => {
 
     try {
         const compra = await Compra.findByPk(compraId, {
-            include: [{ model: Usuario, as: 'vendedor' }]
+            include: [{ model: Usuario, as: 'vendedorCompra' }] // Use o alias correto aqui
         });
 
         if (!compra) {
@@ -101,7 +100,7 @@ router.post('/:compraId', upload.array('fotos', 5), async (req, res) => {
             comentario,
             fotos: fotosArray,
             clienteId,
-            vendedorId: compra.vendedorId,
+            vendedorId: compra.vendedorId, // Acessando o vendedorId corretamente
             compraId: compra.id,
             tipo: 'cliente_para_vendedor' // Adicionando tipo na criação
         });

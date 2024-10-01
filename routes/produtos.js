@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Produto = require("../model/Produto");
 const Usuario = require("../model/Usuario");
-const { Op } = require("sequelize");
+const Comentario = require("../model/Comentario");
+const Compra = require("../model/Compra");
+const Avaliacao = require("../model/Avaliacao");
+const { Op, fn, col } = require("sequelize");
 
 // Rota para listar todos os produtos
 router.get("/", async (req, res) => {
@@ -18,42 +21,51 @@ router.get("/", async (req, res) => {
         {
           [Op.or]: [
             { nome: { [Op.like]: `%${query}%` } },
-            { descricao: { [Op.like]: `%${query}%` } }
-          ]
+            { descricao: { [Op.like]: `%${query}%` } },
+          ],
         },
-        { preco: { [Op.between]: [precoMin, precoMax] } }
-      ]
+        { preco: { [Op.between]: [precoMin, precoMax] } },
+        origem ? { origem: origem } : {},
+      ],
     };
 
-    if (origem) {
-      conditions[Op.and].push({ origem: origem });
-    }
-
-    // Buscar todos os produtos e incluir os dados do vendedor
     const produtos = await Produto.findAll({
       where: conditions,
-      include: [
-        {
-          model: Usuario,
-          as: "vendedor", // Use o alias "vendedor" configurado no model
-          attributes: ["id", "nome", "fotoPerfil"], // Atributos do vendedor que queremos mostrar
-        },
-      ],
-      attributes: ["id", "nome", "descricao", "preco", "fotos", "estoque"], // Inclua o atributo estoque
+      include: [{ model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] }],
     });
 
-    // Calcular a nota média do vendedor para cada produto
-    for (const produto of produtos) {
-      if (produto.vendedor) {
-        produto.vendedor.notaMedia = await produto.vendedor.getNotaMedia();
-      }
-    }
-
-    // Renderizando a view de produtos com os dados obtidos
     res.render("produtos", { produtos });
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     res.status(500).send("Erro ao buscar produtos");
+  }
+});
+
+// Rota para exibir os detalhes do produto
+router.get("/:id", async (req, res) => {
+  try {
+    const produto = await Produto.findByPk(req.params.id, {
+      include: [
+        { model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] }, // Removido "createdAt"
+        { model: Comentario, as: "comentarios", include: [{ model: Usuario, as: "usuario", attributes: ["id", "nome", "fotoPerfil"] }] }
+      ],
+    });
+
+    if (!produto) {
+      return res.status(404).send("Produto não encontrado");
+    }
+
+    const vendas = await Compra.count({ where: { produtoId: produto.id } });
+    const notaMedia = await Avaliacao.findOne({
+      where: { vendedorId: produto.vendedorProduto.id, tipo: 'cliente_para_vendedor' },
+      attributes: [[fn('AVG', col('nota')), 'notaMedia']]
+    });
+    const numeroAvaliacoes = await Avaliacao.count({ where: { vendedorId: produto.vendedorProduto.id, tipo: 'cliente_para_vendedor' } });
+
+    res.render("detalhesProduto", { produto, vendas, notaMedia: notaMedia.dataValues.notaMedia, numeroAvaliacoes });
+  } catch (error) {
+    console.error("Erro ao buscar detalhes do produto:", error);
+    res.status(500).send("Erro ao buscar detalhes do produto");
   }
 });
 
