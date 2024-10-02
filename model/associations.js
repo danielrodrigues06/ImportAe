@@ -5,7 +5,7 @@ const Produto = require("./Produto");
 const Comentario = require("./Comentario");
 
 // Definindo associações
-Usuario.hasMany(Compra, { foreignKey: "clienteId" });
+Usuario.hasMany(Compra, { foreignKey: "clienteId", as: "compras" });
 Compra.belongsTo(Usuario, { foreignKey: "clienteId", as: "cliente" });
 
 Produto.hasMany(Compra, { foreignKey: "produtoId" });
@@ -25,6 +25,9 @@ Avaliacao.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedorAvaliacao"
 
 Usuario.hasMany(Produto, { foreignKey: "vendedorId", as: "produtos" });
 Produto.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedorProduto" });
+
+Produto.hasMany(Avaliacao, { foreignKey: "produtoId", as: "avaliacoesProduto" });
+Avaliacao.belongsTo(Produto, { foreignKey: "produtoId", as: "produto" });
 
 Usuario.hasMany(Comentario, { foreignKey: "usuarioId" });
 Comentario.belongsTo(Usuario, { foreignKey: "usuarioId", as: "usuario" });

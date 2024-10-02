@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil de <%= usuario.nome %></title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Perfil de <%= usuario.nome %></h1>
+        <img src="/imagens/<%= usuario.fotoPerfil || 'default.png' %>" alt="Foto do Usuário" class="img-fluid rounded-circle" width="150">
+        <p>Membro desde: <%= new Date(usuario.createdAt).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) %></p>
+        <a href="/chat?destinatarioId=<%= usuario.id %>" class="btn btn-info">Chat</a>
+
+        <% if (usuario.tipo === 'vendedor') { %>
+          <h4>Importa de: <%= usuario.deOndeImporta %></h4>
+          <h4>Sobre</h4>
+          <p><%= usuario.sobreMim %></p>
+          <h4>Produtos</h4>
+          <div class="row">
+            <% usuario.produtos.forEach(produto => { %>
+              <div class="col-md-4">
+                <div class="card mb-4">
+                  <img src="/imagens/<%= produto.fotos[0] || 'default.png' %>" class="card-img-top" alt="Foto do Produto">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= produto.nome %></h5>
+                    <p class="card-text">Preço: R$ <%= produto.preco %></p>
+                    <a href="/comprar/<%= produto.id %>" class="btn btn-primary">Comprar</a>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+          <h4>Avaliações Recebidas</h4>
+          <div class="list-group">
+            <% if (notaMedia) { %>
+              <p>Nota Média: <%= notaMedia %>/5 estrelas</p>
+            <% } else { %>
+              <p>Este vendedor ainda não possui avaliações.</p>
+            <% } %>
+            <% avaliacoes.forEach(avaliacao => { %>
+              <div class="list-group-item">
+                <h5 class="mb-1"><%= avaliacao.cliente.nome %></h5>
+                <p class="mb-1"><%= avaliacao.comentario %></p>
+                <small>Nota: <%= avaliacao.nota %></small>
+                <% if (avaliacao.compra && avaliacao.compra.produto) { %>
+                  <p>Produto Avaliado: <a href="/produtos/<%= avaliacao.compra.produto.id %>"><%= avaliacao.compra.produto.nome %></a></p>
+                <% } %>
+                <% if (Array.isArray(avaliacao.fotos) && avaliacao.fotos.length > 0) { %>
+                  <div class="mt-2">
+                    <% avaliacao.fotos.forEach(foto => { %>
+                      <img src="/imagens/<%= foto %>" alt="Foto da Avaliação" class="img-fluid" width="100">
+                    <% }); %>
+                  </div>
+                <% } %>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <h4>Compras Recentes</h4>
+          <div class="list-group">
+            <% if (usuario.compras.length > 0) { %>
+              <% usuario.compras.forEach(compra => { %>
+                <div class="list-group-item">
+                  <h5 class="mb-1"><%= compra.produto.nome %></h5>
+                  <p class="mb-1">Comprado em: <%= new Date(compra.createdAt).toLocaleDateString('pt-BR') %></p>
+                  <a href="/detalhesproduto/<%= compra.produto.id %>" class="btn btn-primary">Ver Produto</a>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p>Você ainda não realizou nenhuma compra.</p>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -71,7 +71,7 @@
                 </div>
                 <div class="card-footer">
                   <small class="text-muted">
-                    Vendido por: <a href="/perfil/vendedor/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto ? produto.vendedorProduto.nome : "Desconhecido" %></a>
+                    Vendido por: <a href="/perfil/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto ? produto.vendedorProduto.nome : "Desconhecido" %></a>
                     <% if (produto.vendedorProduto && produto.vendedorProduto.fotoPerfil) { %>
                       <img src="/imagens/<%= produto.vendedorProduto.fotoPerfil %>" alt="Foto do Vendedor" class="img-fluid rounded-circle" width="30">
                     <% } %>
