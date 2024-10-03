@@ -1,0 +1,97 @@
+<!-- views/partials/header.ejs -->
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="public/stylesheets/header.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #003366;">
+    <a class="navbar-brand ml-5 d-flex align-items-center" href="/" style="font-family: 'Montserrat', sans-serif; font-size: 1.75rem; font-weight: bold">
+      <img src="/imagens/logoimportae.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+      ImportAê
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">Sobre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/produtos">Produtos</a>
+        </li>
+      </ul>
+      <div class="navbar-nav">
+        <% if (logado) { %>
+          <a href="/logout" class="btn btn-danger">Logout</a>
+          <a href="/produtos" class="btn btn-primary">Produtos</a>
+          <a href="/chat" class="btn btn-primary">Chat</a>
+          <% if (user.tipo === 'vendedor') { %>
+            <a href="/painelvendedor" class="btn btn-primary">Painel do Vendedor</a>
+            <a href="/cadastrarProduto" class="btn btn-primary">Cadastrar Produto</a>
+            <p>Bem-vindo, <%= user.nome %>!</p>
+            <img src="/imagens/<%= user.fotoPerfil %>" alt="Foto do Vendedor" class="perfil-img" style="width: 50px; height: 50px; border-radius: 50%;">
+          <% } else if (user.tipo === 'cliente') { %>
+            <a href="/painelcliente" class="btn btn-primary">Painel do Cliente</a>
+            <p>Bem-vindo, <%= user.nome %>!</p>
+            <img src="/imagens/<%= user.fotoPerfil %>" alt="Foto do Cliente" class="perfil-img" style="width: 50px; height: 50px; border-radius: 50%;">
+          <% } %>
+          <div class="notification-icon">
+            <a href="#" id="notificationBell">
+              <i class="bi bi-bell-fill"></i>
+              <span id="notificationCount" class="badge">0</span>
+            </a>
+            <div id="notificationDropdown" class="dropdown-content">
+              <!-- Notificações serão carregadas aqui -->
+            </div>
+          </div>
+        <% } else { %>
+          <a href="/login" class="btn btn-primary header-login-btn mr-2">Login</a>
+          <a href="/cadastro" class="btn btn-warning header-btn mr-5">Cadastre-se</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  $(document).ready(function() {
+    function loadNotifications() {
+      $.get("/notificacoes", function(data) {
+        const notificationCount = data.length;
+        $("#notificationCount").text(notificationCount);
+        const notificationDropdown = $("#notificationDropdown");
+        notificationDropdown.empty();
+        data.forEach(notificacao => {
+          const notificationItem = `<div class="notification-item">
+            <p>${notificacao.mensagem}</p>
+            <button class="mark-as-read" data-id="${notificacao.id}">Marcar como lida</button>
+          </div>`;
+          notificationDropdown.append(notificationItem);
+        });
+      });
+    }
+
+    loadNotifications();
+
+    $(document).on("click", ".mark-as-read", function() {
+      const id = $(this).data("id");
+      $.post(`/notificacoes/marcar-como-lida/${id}`, function(response) {
+        if (response.sucesso) {
+          loadNotifications();
+        }
+      });
+    });
+
+    $("#notificationBell").click(function() {
+      $("#notificationDropdown").toggle();
+    });
+  });
+</script>

@@ -107,71 +107,120 @@
     </div>
 
   
-     <!-- Lista de compras -->
-  <h2 class="mb-4">Compras dos seus produtos</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Produto</th>
-        <th>Preço</th>
-        <th>Cliente</th>
-        <th>Email do Cliente</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% compras.forEach(compra => { %>
+       <!-- Lista de compras -->
+    <h2 class="mb-4">Compras dos seus produtos</h2>
+    <table class="table table-striped">
+      <thead>
         <tr>
-          <td><%= compra.produto.nome %></td>
-          <td>R$<%= compra.produto.preco %></td>
-          <td><%= compra.cliente.nome %></td>
-          <td><%= compra.cliente.email %></td>
-          <td>
-            <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
-              <select name="status" class="form-control">
-                <option value="aguardando pagamento" <%= compra.status === 'aguardando pagamento' ? 'selected' : '' %>>Aguardando Pagamento</option>
-                <option value="pago" <%= compra.status === 'pago' ? 'selected' : '' %>>Pago</option>
-                <option value="aguardando fotos" <%= compra.status === 'aguardando fotos' ? 'selected' : '' %>>Aguardando Fotos</option>
-                <option value="fotos enviadas" <%= compra.status === 'fotos enviadas' ? 'selected' : '' %>>Fotos Enviadas</option>
-                <option value="aguardando aprovação" <%= compra.status === 'aguardando aprovação' ? 'selected' : '' %>>Aguardando Aprovação</option>
-                <option value="aprovado pelo cliente" <%= compra.status === 'aprovado pelo cliente' ? 'selected' : '' %>>Aprovado pelo Cliente</option>
-                <option value="enviado" <%= compra.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
-                <option value="entregue" <%= compra.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
-              </select>
-              <button type="submit" class="btn btn-primary mt-2">Atualizar Status</button>
-            </form>
-          </td>
-          <td>
-            <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
-            <!-- Formulário de Avaliação do Cliente -->
-            <% if (!compra.avaliacaoExistente) { %>
-              <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-2">
-                <div class="form-group">
-                  <label for="nota<%= compra.id %>">Nota:</label>
-                  <select class="form-control" id="nota<%= compra.id %>" name="nota" required>
-                    <option value="1">1 Estrela</option>
-                    <option value="2">2 Estrelas</option>
-                    <option value="3">3 Estrelas</option>
-                    <option value="4">4 Estrelas</option>
-                    <option value="5">5 Estrelas</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="comentario<%= compra.id %>">Comentário:</label>
-                  <textarea class="form-control" id="comentario<%= compra.id %>" name="comentario" rows="2"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
-              </form>
-            <% } else { %>
-              <button class="btn btn-secondary mt-2" disabled>Avaliação Enviada</button>
-            <% } %>
-          </td>
+          <th>Produto</th>
+          <th>Preço</th>
+          <th>Cliente</th>
+          <th>Email do Cliente</th>
+          <th>Status</th>
+          <th>Ações</th>
         </tr>
+      </thead>
+      <tbody>
+        <% compras.forEach(compra => { %>
+          <tr>
+            <td><%= compra.produto.nome %></td>
+            <td>R$<%= compra.produto.preco %></td>
+            <td><%= compra.cliente.nome %></td>
+            <td><%= compra.cliente.email %></td>
+            <td>
+              <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
+                <select name="status" class="form-control">
+                  <option value="aguardando pagamento" <%= compra.status === 'aguardando pagamento' ? 'selected' : '' %>>Aguardando Pagamento</option>
+                  <option value="pago" <%= compra.status === 'pago' ? 'selected' : '' %>>Pago</option>
+                  <option value="aguardando fotos" <%= compra.status === 'aguardando fotos' ? 'selected' : '' %>>Aguardando Fotos</option>
+                  <option value="fotos enviadas" <%= compra.status === 'fotos enviadas' ? 'selected' : '' %>>Fotos Enviadas</option>
+                  <option value="aguardando aprovação" <%= compra.status === 'aguardando aprovação' ? 'selected' : '' %>>Aguardando Aprovação</option>
+                  <option value="aprovado pelo cliente" <%= compra.status === 'aprovado pelo cliente' ? 'selected' : '' %>>Aprovado pelo Cliente</option>
+                  <option value="enviado" <%= compra.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
+                  <option value="entregue" <%= compra.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Atualizar Status</button>
+              </form>
+            </td>
+            <td>
+              <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
+              <!-- Botão para adicionar fotos -->
+              <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#adicionarFotosModal<%= compra.id %>">Adicionar Fotos</button>
+              <!-- Modal para adicionar fotos -->
+              <div class="modal fade" id="adicionarFotosModal<%= compra.id %>" tabindex="-1" role="dialog" aria-labelledby="adicionarFotosModalLabel<%= compra.id %>" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="adicionarFotosModalLabel<%= compra.id %>">Adicionar Fotos do Produto e da Embalagem</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form action="/painelVendedor/adicionar-fotos/<%= compra.id %>" method="POST" enctype="multipart/form-data">
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="fotos<%= compra.id %>">Fotos</label>
+                          <input type="file" id="fotos<%= compra.id %>" name="fotos" multiple required>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Enviar Fotos</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!-- Formulário de Avaliação do Cliente -->
+              <% if (!compra.avaliacaoExistente) { %>
+                <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-2">
+                  <div class="form-group">
+                    <label for="nota<%= compra.id %>">Nota:</label>
+                    <select class="form-control" id="nota<%= compra.id %>" name="nota" required>
+                      <option value="1">1 Estrela</option>
+                      <option value="2">2 Estrelas</option>
+                      <option value="3">3 Estrelas</option>
+                      <option value="4">4 Estrelas</option>
+                      <option value="5">5 Estrelas</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="comentario<%= compra.id %>">Comentário:</label>
+                    <textarea class="form-control" id="comentario<%= compra.id %>" name="comentario" rows="2"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+                </form>
+              <% } else { %>
+                <button class="btn btn-secondary mt-2" disabled>Avaliação Enviada</button>
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    </div>
+  
+        <!-- Lista de solicitações -->
+    <h2 class="mb-4">Suas Solicitações</h2>
+    <div class="row">
+      <% solicitacoes.forEach(solicitacao => { %>
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title"><%= solicitacao.nomeProduto %></h5>
+              <p class="card-text">Preço Desejado: R$ <%= solicitacao.precoDesejado %></p>
+              <p class="card-text">Solicitado por: <a href="/perfil/<%= solicitacao.cliente.id %>"><%= solicitacao.cliente.nome %></a></p>
+              <div class="card-text">
+                <% JSON.parse(solicitacao.fotos).forEach(foto => { %>
+                  <img src="/imagens/<%= foto %>" class="img-fluid" alt="Foto do Produto">
+                <% }); %>
+              </div>
+              <a href="/chat?destinatarioId=<%= solicitacao.cliente.id %>" class="btn btn-info mt-2">Chat com Cliente</a>
+            </div>
+          </div>
+        </div>
       <% }); %>
-    </tbody>
-  </table>
-  </div>
+    </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

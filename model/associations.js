@@ -3,8 +3,9 @@ const Compra = require("./Compra");
 const Avaliacao = require("./Avaliacao");
 const Produto = require("./Produto");
 const Comentario = require("./Comentario");
+const Solicitacao = require("./Solicitacao");
+const Notificacao = require("./Notificacao");
 
-// Definindo associações
 Usuario.hasMany(Compra, { foreignKey: "clienteId", as: "compras" });
 Compra.belongsTo(Usuario, { foreignKey: "clienteId", as: "cliente" });
 
@@ -35,10 +36,21 @@ Comentario.belongsTo(Usuario, { foreignKey: "usuarioId", as: "usuario" });
 Produto.hasMany(Comentario, { foreignKey: "produtoId", as: "comentarios" });
 Comentario.belongsTo(Produto, { foreignKey: "produtoId", as: "produto" });
 
+Usuario.hasMany(Solicitacao, { foreignKey: "clienteId", as: "solicitacoesFeitas" });
+Solicitacao.belongsTo(Usuario, { foreignKey: "clienteId", as: "cliente" });
+
+Usuario.hasMany(Solicitacao, { foreignKey: "vendedorId", as: "solicitacoesRecebidas" });
+Solicitacao.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedor" });
+
+Usuario.hasMany(Notificacao, { foreignKey: "usuarioId", as: "notificacoes" });
+Notificacao.belongsTo(Usuario, { foreignKey: "usuarioId", as: "usuario" });
+
 module.exports = {
   Usuario,
   Compra,
   Avaliacao,
   Produto,
-  Comentario
+  Comentario,
+  Solicitacao,
+  Notificacao,
 };

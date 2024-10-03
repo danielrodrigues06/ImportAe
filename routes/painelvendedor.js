@@ -4,6 +4,7 @@ const Produto = require("../model/Produto");
 const Usuario = require("../model/Usuario");
 const Compra = require("../model/Compra");
 const Avaliacao = require("../model/Avaliacao");
+const Solicitacao = require("../model/Solicitacao"); // Adicione esta linha
 const path = require('path');
 const multer = require('multer');
 
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Painel do vendedor - mostra perfil, produtos e compras
+// Painel do vendedor - mostra perfil, produtos, compras e solicitações
 router.get("/", async (req, res) => {
   try {
     const vendedor = await Usuario.findByPk(req.user.id);
@@ -34,25 +35,22 @@ router.get("/", async (req, res) => {
         {
           model: Usuario,
           as: 'cliente',
-          attributes: ['id', 'nome', 'email'] // Inclua o atributo 'id' do cliente
+          attributes: ['id', 'nome', 'email']
+        }
+      ]
+    });
+    const solicitacoes = await Solicitacao.findAll({
+      where: { vendedorId: req.user.id },
+      include: [
+        {
+          model: Usuario,
+          as: 'cliente',
+          attributes: ['id', 'nome']
         }
       ]
     });
 
-    // Verificar se já existe uma avaliação para cada compra
-    for (const compra of compras) {
-      const avaliacaoExistente = await Avaliacao.findOne({
-        where: {
-          compraId: compra.id,
-          vendedorId: req.user.id,
-          clienteId: compra.cliente.id,
-          tipo: 'vendedor_para_cliente'
-        }
-      });
-      compra.dataValues.avaliacaoExistente = !!avaliacaoExistente;
-    }
-
-    res.render("painelVendedor", { vendedor, produtos, compras });
+    res.render("painelVendedor", { vendedor, produtos, compras, solicitacoes });
   } catch (error) {
     console.error("Erro ao carregar o painel do vendedor:", error);
     res.status(500).send("Erro ao carregar o painel do vendedor.");
@@ -131,6 +129,29 @@ router.post("/atualizar-status/:id", async (req, res) => {
   } catch (error) {
     console.error("Erro ao atualizar status da compra:", error);
     res.status(500).send("Erro ao atualizar status da compra.");
+  }
+});
+
+// Adicionar fotos do produto e da embalagem
+router.post("/adicionar-fotos/:id", upload.array('fotos', 5), async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const fotosArray = req.files.map(file => file.filename); // Captura os nomes dos arquivos enviados
+
+    const compra = await Compra.findByPk(id);
+    if (!compra || compra.vendedorId !== req.user.id) {
+      return res.status(404).send("Compra não encontrada ou acesso negado.");
+    }
+
+    compra.fotos = fotosArray;
+    compra.status = "fotos enviadas";
+    await compra.save();
+
+    res.redirect("/painelVendedor");
+  } catch (error) {
+    console.error("Erro ao adicionar fotos:", error);
+    res.status(500).send("Erro ao adicionar fotos.");
   }
 });
 

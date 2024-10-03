@@ -59,6 +59,8 @@
               </div>
             <% }); %>
           </div>
+          <!-- Botão para solicitar produto -->
+          <button type="button" class="btn btn-warning mt-4" data-toggle="modal" data-target="#solicitacaoModal">Solicitar Produto</button>
         <% } else { %>
           <h4>Compras Recentes</h4>
           <div class="list-group">
@@ -78,6 +80,42 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal para solicitar produto -->
+  <div class="modal fade" id="solicitacaoModal" tabindex="-1" role="dialog" aria-labelledby="solicitacaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="solicitacaoModalLabel">Solicitar Produto</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/solicitacoes" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="nomeProduto">Nome do Produto</label>
+              <input type="text" class="form-control" id="nomeProduto" name="nomeProduto" required>
+            </div>
+            <div class="form-group">
+              <label for="precoDesejado">Preço Desejado</label>
+              <input type="number" class="form-control" id="precoDesejado" name="precoDesejado" required>
+            </div>
+            <div class="form-group">
+              <label for="fotos">Fotos</label>
+              <input type="file" class="form-control" id="fotos" name="fotos" multiple required>
+            </div>
+            <input type="hidden" name="vendedorId" value="<%= usuario.id %>">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Enviar Solicitação</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

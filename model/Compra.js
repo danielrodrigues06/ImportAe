@@ -61,6 +61,10 @@ const Compra = sequelize.define("Compra", {
     defaultValue: "aguardando pagamento",
     allowNull: false,
   },
+  fotos: {
+    type: DataTypes.JSON,
+    allowNull: true,
+  },
 });
 
 module.exports = Compra;
