@@ -1,0 +1,13 @@
+/* public/stylesheets/footer.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+.footer {
+  background-color: #003366;
+  color: #F2F2F2;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center; /* Centraliza o texto */
+}
+
+.footer .text-muted {
+  color: #F2F2F2 !important;
+}

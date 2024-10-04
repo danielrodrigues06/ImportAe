@@ -1,0 +1,71 @@
+/* public/stylesheets/navbar.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+.navbar {
+  background-color: #003366;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.navbar-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #F2F2F2 !important; /* Atualizado para branco */
+}
+
+.navbar-brand img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.navbar-nav .nav-link {
+  color: #F2F2F2 !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #00AEEF !important;
+}
+
+.search-bar {
+  flex-grow: 1; /* Faz a barra de pesquisa crescer para ocupar mais espaço */
+  max-width: 600px; /* Define um limite máximo de largura */
+  display: flex; /* Adiciona flexbox para alinhar os itens */
+}
+
+.search-bar .form-control {
+  border: 1px solid #00AEEF;
+  flex-grow: 1; /* Faz o input crescer para ocupar o espaço disponível */
+  border-radius: 20px 0 0 20px; /* Adiciona bordas arredondadas ao campo de pesquisa */
+}
+
+.search-bar .btn {
+  background-color: #00AEEF;
+  color: #F2F2F2;
+  border: none; /* Remove a borda do botão */
+  border-radius: 0 20px 20px 0; /* Adiciona bordas arredondadas ao botão */
+}
+
+.dropdown-menu {
+  background-color: #003366;
+}
+
+.dropdown-item {
+  color: #F2F2F2 !important;
+}
+
+.dropdown-item:hover {
+  background-color: #00AEEF;
+  color: #003366 !important;
+}
+
+.header-login-btn {
+  background-color: #28A745;
+  color: #F2F2F2;
+  margin-right: 10px; /* Adiciona margem à direita */
+}
+
+.header-btn {
+  background-color: #FF7F0E;
+  color: #F2F2F2;
+  margin-left: 10px; /* Adiciona margem à esquerda */
+}

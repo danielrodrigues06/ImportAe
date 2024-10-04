@@ -25,7 +25,6 @@ const avaliacaoRouter = require('./routes/avaliacao');
 const perfilRouter = require('./routes/perfil');
 const comentariosRouter = require('./routes/comentarios');
 const solicitacoesRouter = require('./routes/solicitacoes');
-const notificacoesRouter = require('./routes/notificacoes');
 
 const app = express();
 
@@ -51,6 +50,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(authenticationMiddleware);
 
 app.use(flash());
 
@@ -60,18 +60,13 @@ function authenticationMiddleware(req, res, next) {
     res.locals.isAuthenticated = true;
     res.locals.user = req.user;
     res.locals.logado = true;
-    return next();
+  } else {
+    res.locals.isAuthenticated = false;
+    res.locals.user = null;
+    res.locals.logado = false;
   }
-  res.locals.isAuthenticated = false;
-  res.locals.user = null;
-  res.locals.logado = false;
-  // Permite acesso à rota de login sem redirecionar novamente
-  if (req.path === "/login") return next();
-
-  // Redireciona para login com mensagem de erro
-  res.redirect("/login?erro=1");
+  next();
 }
-
 // Middleware específico para vendedores
 function vendedorMiddleware(req, res, next) {
   if (req.isAuthenticated() && req.user.tipo === 'vendedor') {
@@ -104,7 +99,6 @@ app.use('/avaliacao', authenticationMiddleware, avaliacaoRouter);
 app.use('/perfil', authenticationMiddleware, perfilRouter);
 app.use('/comentarios', authenticationMiddleware, comentariosRouter);
 app.use('/solicitacoes', authenticationMiddleware, solicitacoesRouter);
-app.use('/notificacoes', authenticationMiddleware, notificacoesRouter);
 
 // Sincronização com o banco de dados
 sequelize

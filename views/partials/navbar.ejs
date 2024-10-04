@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand ml-5 d-flex align-items-center" href="/">
+    <img src="/imagens/logoimportae.png" alt="Logo">
+    ImportAê
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+    <!-- Barra de Pesquisa -->
+    <form class="form-inline my-2 my-lg-0 search-bar">
+      <input class="form-control mr-sm-2" type="search" placeholder="Buscar produtos" aria-label="Search">
+      <button class="btn my-2 my-sm-0" type="submit">
+        <i class="bi bi-search"></i> <!-- Ícone de pesquisa do Bootstrap -->
+      </button>
+    </form>
+
+    <!-- Dropdown com todas as opções -->
+    <div class="navbar-nav">
+      <% if (logado) { %>
+        <div class="dropdown">
+          <img src="/imagens/<%= user.fotoPerfil %>" alt="Foto do Usuário" class="perfil-img dropdown-toggle" style="width: 50px; height: 50px; border-radius: 50%;" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <span class="dropdown-item">Olá, <%= user.nome %>!</span>
+            <% if (user.tipo === 'vendedor') { %>
+              <a class="dropdown-item" href="/painelvendedor">Painel do Vendedor</a>
+              <a class="dropdown-item" href="/cadastrarProduto">Cadastrar Produto</a>
+            <% } else if (user.tipo === 'cliente') { %>
+              <a class="dropdown-item" href="/painelcliente">Painel do Cliente</a>
+            <% } %>
+            <a class="dropdown-item" href="/produtos">Produtos</a>
+            <a class="dropdown-item" href="/chat">Chat</a>
+            <a class="dropdown-item" href="/logout">Logout</a>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/login" class="btn header-login-btn mr-2 ml-2">Login</a>
+        <a href="/cadastro" class="btn header-btn mr-5">Cadastre-se</a>
+      <% } %>
+    </div>
+  </div>
+</nav>

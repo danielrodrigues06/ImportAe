@@ -1,13 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link rel="stylesheet" href="/stylesheets/footer.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <style>
+    .content {
+      padding-top: 70px;
+      padding-bottom: 50px;
+    }
+
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      color: #003366;
+      text-align: center;
+    }
+
+    .card-text {
+      font-family: 'Montserrat', sans-serif;
+      color: #555;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: #003366;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background-color: #00AEEF;
+    }
+
+    .btn-info {
+      background-color: #00AEEF;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-info:hover {
+      background-color: #003366;
+    }
+
+    .form-inline .form-control {
+      border-radius: 20px 0 0 20px;
+    }
+
+    .form-inline .btn {
+      border-radius: 0 20px 20px 0;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background-color: #003366;
+      border-radius: 50%;
+    }
+
+    .card-img-top {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .card-footer .btn {
+      margin-right: 5px;
+    }
+
+    .vendedor-info {
+      font-size: 0.9rem;
+      text-align: center;
+      color: #555;
+    }
+
+    .vendedor-info a {
+      color: #003366;
+      text-decoration: none;
+    }
+
+    .vendedor-info a:hover {
+      text-decoration: underline;
+    }
+
+    .vendedor-info .bi-star-fill {
+      color: #FFD700;
+    }
+  </style>
 </head>
+
 <body>
-  <div class="container mt-5">
+  <%- include('partials/navbar') %>
+  <div class="content container-fluid mt-5">
     <div class="row">
       <!-- Barra lateral de filtros -->
       <div class="col-md-3">
@@ -32,7 +140,7 @@
           <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
         </form>
       </div>
-      
+
       <!-- Formulário de Pesquisa -->
       <div class="col-md-9">
         <form class="form-inline mb-4" action="/produtos" method="GET">
@@ -49,7 +157,7 @@
                   <div class="carousel-inner">
                     <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
                       <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                        <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+                        <img src="/imagens/<%= foto %>" class="card-img-top" alt="Foto do Produto">
                       </div>
                     <% }); %>
                   </div>
@@ -65,28 +173,19 @@
 
                 <div class="card-body">
                   <h5 class="card-title"><%= produto.nome %></h5>
-                  <p class="card-text">Preço: R$ <%= produto.preco %></p>
-                  <p class="card-text"><%= produto.descricao %></p>
-                  <p class="card-text">Estoque: <%= produto.estoque %></p>
+                  <a href="/produtos/<%= produto.id %>" class="btn btn-primary">R$ <%= produto.preco %></a>
                 </div>
                 <div class="card-footer">
-                  <small class="text-muted">
-                    Vendido por: <a href="/perfil/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto ? produto.vendedorProduto.nome : "Desconhecido" %></a>
-                    <% if (produto.vendedorProduto && produto.vendedorProduto.fotoPerfil) { %>
-                      <img src="/imagens/<%= produto.vendedorProduto.fotoPerfil %>" alt="Foto do Vendedor" class="img-fluid rounded-circle" width="30">
-                    <% } %>
+                  <div class="vendedor-info">
+                    <a href="/perfil/<%= produto.vendedorProduto.id %>">
+                      <%= produto.vendedorProduto ? produto.vendedorProduto.nome : "Desconhecido" %>
+                    </a>
                     <% if (produto.vendedorProduto && produto.vendedorProduto.notaMedia) { %>
-                      <p>Nota: <%= produto.vendedorProduto.notaMedia %>/5 estrelas</p>
+                      <span>
+                        <%= produto.vendedorProduto.notaMedia %>/5 <i class="bi bi-star-fill"></i>
+                      </span>
                     <% } %>
-                  </small>
-                  <% if (produto.estoque > 0) { %>
-                    <a href="/produtos/<%= produto.id %>" class="btn btn-primary">Ver Detalhes</a>
-                  <% } else { %>
-                    <button class="btn btn-secondary" disabled>Indisponível</button>
-                  <% } %>
-                  <% if (produto.vendedorProduto) { %>
-                    <a href="/chat?destinatarioId=<%= produto.vendedorProduto.id %>" class="btn btn-info">Chat com Vendedor</a>
-                  <% } %>
+                  </div>
                 </div>
               </div>
             </div>
@@ -95,9 +194,10 @@
       </div>
     </div>
   </div>
-
+  <%- include('partials/footer') %>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

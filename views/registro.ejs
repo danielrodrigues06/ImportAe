@@ -6,6 +6,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link rel="stylesheet" href="/stylesheets/footer.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <style>
+    .register-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 70px; /* Altura da navbar */
+      padding-bottom: 50px; /* Altura do footer */
+      background-color: #F2F2F2;
+    }
+
+    .register-card {
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    .register-card h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: #003366;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .register-card .form-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      color: #003366;
+    }
+
+    .register-card .btn-primary {
+      background-color: #003366;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .register-card .btn-primary:hover {
+      background-color: #00AEEF;
+    }
+
+    .profile-pic {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-pic img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid #003366;
+    }
+
+    .profile-pic input {
+      display: none;
+    }
+  </style>
   <script>
     function toggleFields() {
       const tipo = document.getElementById("tipo").value;
@@ -21,6 +92,15 @@
       }
     }
 
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const output = document.getElementById('profileImage');
+        output.src = reader.result;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
     window.onload = function () {
       toggleFields(); // Atualiza ao carregar a página
     };
@@ -28,85 +108,95 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1 class="my-4">Cadastro</h1>
-    <form action="/cadastro" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-      <div class="mb-3">
-        <label for="nome" class="form-label">Nome:</label>
-        <input type="text" class="form-control" id="nome" name="nome" required>
-        <div class="invalid-feedback">Por favor, insira seu nome.</div>
+  <%- include('partials/navbar') %>
+  <div class="register-container">
+    <div class="register-card">
+      <h1>Cadastro</h1>
+      <div class="profile-pic">
+        <label for="imagem">
+          <img id="profileImage" src="/imagens/default-profile.png" alt="Foto de Perfil">
+        </label>
+        <input type="file" id="imagem" name="imagem" accept="image/*" onchange="previewImage(event)">
       </div>
-
-      <div class="mb-3">
-        <label for="email" class="form-label">Email:</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-        <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
-      </div>
-
-      <div class="mb-3">
-        <label for="senha" class="form-label">Senha:</label>
-        <input type="password" class="form-control" id="senha" name="senha" required>
-        <div class="invalid-feedback">Por favor, insira uma senha.</div>
-      </div>
-
-      <div class="mb-3">
-        <label for="rsenha" class="form-label">Repetir Senha:</label>
-        <input type="password" class="form-control" id="rsenha" name="rsenha" required>
-        <div class="invalid-feedback">Por favor, repita sua senha.</div>
-      </div>
-
-      <div class="mb-3">
-        <label for="telefone" class="form-label">Telefone:</label>
-        <input type="text" class="form-control" id="telefone" name="telefone">
-      </div>
-
-      <div class="mb-3">
-        <label for="dataNascimento" class="form-label">Data de Nascimento:</label>
-        <input type="date" class="form-control" id="dataNascimento" name="dataNascimento">
-      </div>
-
-      <div class="mb-3">
-        <label for="tipo" class="form-label">Tipo:</label>
-        <select id="tipo" name="tipo" class="form-select" onchange="toggleFields()">
-          <option value="cliente">Cliente</option>
-          <option value="vendedor">Vendedor</option>
-        </select>
-      </div>
-
-      <!-- Campos adicionais para vendedores -->
-      <div id="vendedorFields" style="display: none;">
+      <form action="/cadastro" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome:</label>
+              <input type="text" class="form-control" id="nome" name="nome" required>
+              <div class="invalid-feedback">Por favor, insira seu nome.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email:</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+              <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="senha" class="form-label">Senha:</label>
+              <input type="password" class="form-control" id="senha" name="senha" required>
+              <div class="invalid-feedback">Por favor, insira uma senha.</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="rsenha" class="form-label">Repetir Senha:</label>
+              <input type="password" class="form-control" id="rsenha" name="rsenha" required>
+              <div class="invalid-feedback">Por favor, repita sua senha.</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="telefone" class="form-label">Telefone:</label>
+              <input type="text" class="form-control" id="telefone" name="telefone">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="dataNascimento" class="form-label">Data de Nascimento:</label>
+              <input type="date" class="form-control" id="dataNascimento" name="dataNascimento">
+            </div>
+          </div>
+        </div>
         <div class="mb-3">
-          <label for="deOndeImporta" class="form-label">De onde importa:</label>
-          <select id="deOndeImporta" name="deOndeImporta" class="form-select">
-            <option value="eua">EUA</option>
-            <option value="china">China</option>
+          <label for="tipo" class="form-label">Tipo:</label>
+          <select id="tipo" name="tipo" class="form-select" onchange="toggleFields()">
+            <option value="cliente">Cliente</option>
+            <option value="vendedor">Vendedor</option>
           </select>
         </div>
-
-        <div class="mb-3">
-          <label for="sobreMim" class="form-label">Sobre Mim:</label>
-          <textarea id="sobreMim" name="sobreMim" class="form-control"></textarea>
+        <!-- Campos adicionais para vendedores -->
+        <div id="vendedorFields" style="display: none;">
+          <div class="mb-3">
+            <label for="deOndeImporta" class="form-label">De onde importa:</label>
+            <select id="deOndeImporta" name="deOndeImporta" class="form-select">
+              <option value="eua">EUA</option>
+              <option value="china">China</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="sobreMim" class="form-label">Sobre Mim:</label>
+            <textarea id="sobreMim" name="sobreMim" class="form-control"></textarea>
+          </div>
         </div>
-      </div>
-
-      <div class="mb-3">
-        <label for="imagem" class="form-label">Foto de Perfil:</label>
-        <input type="file" class="form-control" id="imagem" name="imagem">
-        <div class="invalid-feedback">Por favor, envie uma foto de perfil.</div>
-      </div>
-
-      <button type="submit" class="btn btn-primary">Registrar</button>
-    </form>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Registrar</button>
+      </form>
+    </div>
   </div>
-
+  <%- include('partials/footer') %>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Validação de formulário do Bootstrap
     (function () {
       'use strict'
-
       const forms = document.querySelectorAll('.needs-validation')
-
       Array.prototype.slice.call(forms)
         .forEach(function (form) {
           form.addEventListener('submit', function (event) {
@@ -114,7 +204,6 @@
               event.preventDefault()
               event.stopPropagation()
             }
-
             form.classList.add('was-validated')
           }, false)
         })
