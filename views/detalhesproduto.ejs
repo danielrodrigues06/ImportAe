@@ -5,91 +5,334 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Produto</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link rel="stylesheet" href="/stylesheets/footer.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      padding: 30;
+    }
+    .carousel-item img {
+      cursor: pointer;
+      width: 100%;
+      height: 200px; /* Diminuir a altura da imagem do produto */
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .carousel-item img:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+    .product-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #003366;
+    }
+    .product-info {
+      font-size: 1.2rem;
+      color: #555;
+    }
+    .product-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .product-stats div {
+      text-align: center;
+      margin-right: 10px; /* Reduzir o espaço entre os elementos */
+    }
+    .product-stats .stat-label {
+      font-size: 1rem;
+      color: #555;
+    }
+    .product-stats .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #003366;
+    }
+    .btn-buy {
+      background-color: #28A745;
+      color: #fff;
+      font-weight: bold;
+      width: auto;
+      margin-top: 20px;
+    }
+    .btn-buy:hover {
+      background-color: #218838;
+    }
+    .product-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #003366;
+      margin-top: 20px;
+      margin-left: 20px;
+    }
+    .vendedor-info {
+      text-align: center;
+      margin-top: 20px;
+      border: 1px solid #ddd; /* Borda ao redor da caixa */
+      padding: 10px; /* Diminuir o padding da caixa */
+      border-radius: 10px;
+      background-color: #f9f9f9; /* Fundo leve */
+    }
+    .vendedor-info h4 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #003366;
+      margin-bottom: 10px; /* Diminuir o margin-bottom */
+    }
+    .vendedor-info hr {
+      border: 0;
+      height: 1px;
+      background-color: #ddd;
+      margin: 5px 0; /* Diminuir o margin */
+    }
+    .vendedor-info img {
+      border-radius: 50%;
+      width: 80px; /* Diminuir o tamanho da imagem do vendedor */
+      height: 80px; /* Diminuir o tamanho da imagem do vendedor */
+    }
+    .vendedor-info h5 {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #003366;
+    }
+    .vendedor-info p {
+      color: #555;
+    }
+    .vendedor-info a {
+      color: #00AEEF;
+      text-decoration: none;
+    }
+    .vendedor-info a:hover {
+      text-decoration: underline;
+    }
+    .vendedor-info .btn-chat {
+      background-color: #00AEEF;
+      color: #fff;
+      font-weight: bold;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .vendedor-info .btn-chat:hover {
+      background-color: #007B9E;
+    }
+    .product-details-table {
+      margin-top: 20px;
+    }
+    .product-details-table th, .product-details-table td {
+      text-align: left;
+      padding: 8px;
+    }
+    .product-details-table th {
+      background-color: #003366;
+      color: #fff;
+    }
+    .product-details-table td {
+      background-color: #f2f2f2;
+    }
+    .qa-section {
+      margin-top: 40px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    .qa-section h4 {
+      font-weight: bold;
+      color: #003366;
+    }
+    .qa-section .form-group label {
+      font-weight: bold;
+    }
+    .qa-section .btn-primary {
+      background-color: #003366;
+      border: none;
+      font-weight: bold;
+    }
+    .qa-section .btn-primary:hover {
+      background-color: #00AEEF;
+    }
+    .media img {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+    }
+    .media-body h5 {
+      font-weight: bold;
+      color: #003366;
+    }
+    .media-body p {
+      color: #555;
+    }
+    .media-body small {
+      color: #999;
+    }
+    .media-body .btn-secondary {
+      background-color: #555;
+      border: none;
+      font-weight: bold;
+    }
+    .media-body .btn-secondary:hover {
+      background-color: #333;
+    }
+    .product-details-title {
+      margin-top: 40px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #003366;
+    }
+    .product-description {
+      margin-top: 40px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    .qa-divider {
+      border-top: 1px solid #ddd;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-5">
+  <%- include('partials/navbar') %>
+  
+  <!-- Usando container-fluid para expandir a página -->
+  <div class="container-fluid mt-5">
     <div class="row">
       <div class="col-md-8">
-        <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
-              <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+        <div class="row">
+          <div class="col-md-6">
+            <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
+                  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                    <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+                  </div>
+                <% }); %>
+              </div>
+              <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h1 class="product-title mt-4"><%= produto.nome %></h1>
+            <div class="product-stats">
+              <div>
+                <p class="stat-label">ESTOQUE</p>
+                <p class="stat-value"><%= produto.estoque %></p>
+              </div>
+              <div>
+                <p class="stat-label">VENDAS</p>
+                <p class="stat-value"><%= vendas %></p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center">
+              <a href="/comprar/<%= produto.id %>" class="btn btn-buy">Comprar</a>
+              <span class="product-price">R$ <%= produto.preco %></span>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="product-details-title">CARACTERÍSTICAS</h2>
+        <table class="table product-details-table mt-4">
+          <tr>
+            <th>Origem do Produto</th>
+            <td><%= produto.origem %></td>
+          </tr>
+          <tr>
+            <th>Categoria</th>
+            <td><%= produto.categoria %></td>
+          </tr>
+        </table>
+
+        <h2 class="product-details-title">DESCRIÇÃO DO PRODUTO</h2>
+        <div class="product-description">
+          <p><%= produto.descricao %></p>
+          <p><strong>Criado em:</strong> <%= new Date(produto.createdAt).toLocaleString() %></p>
+        </div>
+
+        <div class="qa-section">
+          <h4>PERGUNTAS E RESPOSTAS</h4>
+          <form action="/comentarios/<%= produto.id %>" method="POST">
+            <div class="form-group">
+              <label for="comentario">Faça uma pergunta:</label>
+              <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+          </form>
+
+          <div class="mt-4">
+            <% produto.comentarios.forEach(comentario => { %>
+              <div class="media mb-3">
+                <img src="/imagens/<%= comentario.usuario.fotoPerfil || 'default.png' %>" alt="Foto do Usuário" class="mr-3 img-fluid rounded-circle">
+                <div class="media-body">
+                  <h5 class="mt-0"><%= comentario.usuario.nome %></h5>
+                  <p><%= comentario.comentario %></p>
+                  <small class="text-muted"><%= new Date(comentario.createdAt).toLocaleString() %></small>
+                  <% if (comentario.resposta) { %>
+                    <div class="qa-divider"></div>
+                    <div class="ml-4 mt-2">
+                      <h6>Resposta do Vendedor:</h6>
+                      <p><%= comentario.resposta %></p>
+                    </div>
+                  <% } %>
+                  <% if (user && user.id === produto.vendedorProduto.id) { %>
+                    <form action="/comentarios/responder/<%= comentario.id %>" method="POST" class="mt-2">
+                      <div class="form-group">
+                        <label for="resposta<%= comentario.id %>">Responder:</label>
+                        <textarea class="form-control" id="resposta<%= comentario.id %>" name="resposta" rows="2" required></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-secondary">Enviar Resposta</button>
+                    </form>
+                  <% } %>
+                </div>
               </div>
             <% }); %>
           </div>
-          <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
-        </div>
-        <h1 class="mt-4"><%= produto.nome %></h1>
-        <p>Estoque: <%= produto.estoque %></p>
-        <p>Vendas: <%= vendas %></p>
-        <p>Categoria: <%= produto.categoria %></p>
-        <p>Descrição: <%= produto.descricao %></p>
-        <p>Criado em: <%= new Date(produto.createdAt).toLocaleString() %></p>
-
-        <h4>Perguntas e Respostas</h4>
-        <form action="/comentarios/<%= produto.id %>" method="POST">
-          <div class="form-group">
-            <label for="comentario">Faça uma pergunta:</label>
-            <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Enviar</button>
-        </form>
-
-        <div class="mt-4">
-          <% produto.comentarios.forEach(comentario => { %>
-            <div class="media mb-3">
-              <img src="/imagens/<%= comentario.usuario.fotoPerfil || 'default.png' %>" alt="Foto do Usuário" class="mr-3 img-fluid rounded-circle" width="50">
-              <div class="media-body">
-                <h5 class="mt-0"><%= comentario.usuario.nome %></h5>
-                <p><%= comentario.comentario %></p>
-                <small class="text-muted"><%= new Date(comentario.createdAt).toLocaleString() %></small>
-                <% if (comentario.resposta) { %>
-                  <div class="ml-4 mt-2">
-                    <h6>Resposta do Vendedor:</h6>
-                    <p><%= comentario.resposta %></p>
-                  </div>
-                <% } %>
-                <% if (user && user.id === produto.vendedorProduto.id) { %>
-                  <form action="/comentarios/responder/<%= comentario.id %>" method="POST" class="mt-2">
-                    <div class="form-group">
-                      <label for="resposta<%= comentario.id %>">Responder:</label>
-                      <textarea class="form-control" id="resposta<%= comentario.id %>" name="resposta" rows="2" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">Enviar Resposta</button>
-                  </form>
-                <% } %>
-              </div>
-            </div>
-          <% }); %>
         </div>
       </div>
 
+      <!-- Bloco de informações do vendedor -->
       <div class="col-md-4">
-        <h4>Vendedor</h4>
-        <div class="card">
-          <div class="card-body text-center">
-            <img src="/imagens/<%= produto.vendedorProduto.fotoPerfil || 'default.png' %>" alt="Foto do Vendedor" class="img-fluid rounded-circle" width="100">
-            <h5 class="mt-3"><a href="/perfil/vendedor/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto.nome %></a></h5>
-            <p>Membro desde: <%= new Date(produto.vendedorProduto.createdAt).toLocaleString('pt-BR', { month: 'long', year: 'numeric' }) %></p>
-            <p>Nota Média: <%= notaMedia %>/5</p>
-            <p>Número de Avaliações: <%= numeroAvaliacoes %></p>
-            <a href="/chat?destinatarioId=<%= produto.vendedorProduto.id %>" class="btn btn-info">Chat com Vendedor</a>
-          </div>
+        <div class="vendedor-info border p-3">
+          <h4 class="text-center">Vendedor</h4> <!-- Título do Vendedor -->
+          <img src="/imagens/<%= produto.vendedorProduto.fotoPerfil || 'default.png' %>" alt="Foto do Vendedor">
+          <h5><a href="/perfil/vendedor/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto.nome %></a></h5>
+
+          <hr> <!-- Linha minimalista -->
+
+          <p>Membro desde: <%= new Date(produto.vendedorProduto.createdAt).toLocaleString('pt-BR', { month: 'long', year: 'numeric' }) %></p>
+
+          <hr> <!-- Linha minimalista -->
+
+          <p>Nota Média: <%= notaMedia %>/5</p>
+
+          <hr> <!-- Linha minimalista -->
+
+          <p>Número de Avaliações: <%= numeroAvaliacoes %></p>
+
+          <a href="/chat?destinatarioId=<%= produto.vendedorProduto.id %>" class="btn btn-chat">Chat com Vendedor</a>
         </div>
       </div>
+
     </div>
   </div>
 
+  <%- include('partials/footer') %>
+
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

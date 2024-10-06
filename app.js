@@ -100,15 +100,7 @@ app.use('/perfil', authenticationMiddleware, perfilRouter);
 app.use('/comentarios', authenticationMiddleware, comentariosRouter);
 app.use('/solicitacoes', authenticationMiddleware, solicitacoesRouter);
 
-// Sincronização com o banco de dados
-sequelize
-  .sync({ alter: true })
-  .then(() => {
-    console.log("Todas as tabelas foram sincronizadas!");
-  })
-  .catch((error) => {
-    console.error("Erro ao sincronizar as tabelas:", error);
-  });
+
 
 // Tratamento de erros
 app.use(function (req, res, next) {
