@@ -67,6 +67,7 @@ function authenticationMiddleware(req, res, next) {
   }
   next();
 }
+
 // Middleware específico para vendedores
 function vendedorMiddleware(req, res, next) {
   if (req.isAuthenticated() && req.user.tipo === 'vendedor') {
