@@ -31,41 +31,37 @@ router.get("/", async (req, res) => {
 
     const produtos = await Produto.findAll({
       where: conditions,
-      include: [{ model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] }],
+      include: [
+        {
+          model: Usuario,
+          as: "vendedorProduto",
+          attributes: ["id", "nome", "fotoPerfil"],
+          include: [
+            {
+              model: Avaliacao,
+              as: "avaliacoesRecebidas",
+              attributes: [],
+              where: { tipo: 'cliente_para_vendedor' },
+              required: false
+            }
+          ]
+        }
+      ],
+      attributes: {
+        include: [
+          [
+            fn('AVG', col('vendedorProduto.avaliacoesRecebidas.nota')),
+            'notaMedia'
+          ]
+        ]
+      },
+      group: ['Produto.id', 'vendedorProduto.id', 'vendedorProduto.nome', 'vendedorProduto.fotoPerfil']
     });
 
     res.render("produtos", { produtos });
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     res.status(500).send("Erro ao buscar produtos");
-  }
-});
-
-// Rota para exibir os detalhes do produto
-router.get("/:id", async (req, res) => {
-  try {
-    const produto = await Produto.findByPk(req.params.id, {
-      include: [
-        { model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] },
-        { model: Comentario, as: "comentarios", include: [{ model: Usuario, as: "usuario", attributes: ["id", "nome", "fotoPerfil"] }] }
-      ],
-    });
-
-    if (!produto) {
-      return res.status(404).send("Produto não encontrado");
-    }
-
-    const vendas = await Compra.count({ where: { produtoId: produto.id } });
-    const notaMedia = await Avaliacao.findOne({
-      where: { vendedorId: produto.vendedorProduto.id, tipo: 'cliente_para_vendedor' },
-      attributes: [[fn('AVG', col('nota')), 'notaMedia']]
-    });
-    const numeroAvaliacoes = await Avaliacao.count({ where: { vendedorId: produto.vendedorProduto.id, tipo: 'cliente_para_vendedor' } });
-
-    res.render("detalhesProduto", { produto, vendas, notaMedia: notaMedia.dataValues.notaMedia, numeroAvaliacoes, user: req.user });
-  } catch (error) {
-    console.error("Erro ao buscar detalhes do produto:", error);
-    res.status(500).send("Erro ao buscar detalhes do produto");
   }
 });
 

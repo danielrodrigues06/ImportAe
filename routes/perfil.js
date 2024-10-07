@@ -15,8 +15,30 @@ router.get('/:id', async (req, res) => {
                     model: Avaliacao,
                     as: 'avaliacoesRecebidas',
                     required: false,
+                    where: {
+                        tipo: 'cliente_para_vendedor'
+                    },
                     include: [
                         { model: Usuario, as: 'cliente', attributes: ['id', 'nome', 'fotoPerfil'] },
+                        {
+                            model: Compra,
+                            as: 'compra',
+                            include: [
+                                { model: Produto, as: 'produto', attributes: ['id', 'nome'] }
+                            ]
+                        }
+                    ],
+                    order: [['createdAt', 'DESC']]
+                },
+                {
+                    model: Avaliacao,
+                    as: 'avaliacoesRecebidasCliente',
+                    required: false,
+                    where: {
+                        tipo: 'vendedor_para_cliente'
+                    },
+                    include: [
+                        { model: Usuario, as: 'vendedorAvaliacao', attributes: ['id', 'nome', 'fotoPerfil'] },
                         {
                             model: Compra,
                             as: 'compra',
@@ -38,7 +60,8 @@ router.get('/:id', async (req, res) => {
                     include: [{ model: Produto, as: 'produto', attributes: ['id', 'nome', 'fotos'] }],
                     order: [['createdAt', 'DESC']]
                 }
-            ]
+            ],
+            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim', 'createdAt'] // Inclua createdAt
         });
 
         if (!usuario) {
@@ -54,7 +77,16 @@ router.get('/:id', async (req, res) => {
         });
         const notaMedia = avaliacoes.length > 0 ? (avaliacoes.reduce((acc, avaliacao) => acc + avaliacao.nota, 0) / avaliacoes.length).toFixed(1) : null;
 
-        res.render('perfil', { usuario, notaMedia, avaliacoes });
+        // Calcular a nota média do cliente, se aplicável
+        const avaliacoesCliente = usuario.avaliacoesRecebidasCliente.map(avaliacao => {
+            return {
+                ...avaliacao.toJSON(),
+                fotos: avaliacao.fotos || []
+            };
+        });
+        const notaMediaCliente = avaliacoesCliente.length > 0 ? (avaliacoesCliente.reduce((acc, avaliacao) => acc + avaliacao.nota, 0) / avaliacoesCliente.length).toFixed(1) : null;
+
+        res.render('perfil', { usuario, notaMedia, avaliacoes, notaMediaCliente, avaliacoesCliente });
     } catch (error) {
         console.error('Erro ao buscar perfil do usuário:', error);
         res.status(500).send('Erro ao buscar perfil do usuário');

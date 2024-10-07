@@ -180,10 +180,19 @@
                     <a href="/perfil/<%= produto.vendedorProduto.id %>">
                       <%= produto.vendedorProduto ? produto.vendedorProduto.nome : "Desconhecido" %>
                     </a>
-                    <% if (produto.vendedorProduto && produto.vendedorProduto.notaMedia) { %>
+                    <% if (produto.notaMedia) { %>
                       <span>
-                        <%= produto.vendedorProduto.notaMedia %>/5 <i class="bi bi-star-fill"></i>
+                        <%= produto.notaMedia %>/5 <i class="bi bi-star-fill"></i>
                       </span>
+                      <div class="star-rating">
+                        <% for (let i = 1; i <= 5; i++) { %>
+                          <% if (i <= produto.notaMedia) { %>
+                            <i class="bi bi-star-fill"></i>
+                          <% } else { %>
+                            <i class="bi bi-star"></i>
+                          <% } %>
+                        <% } %>
+                      </div>
                     <% } %>
                   </div>
                 </div>

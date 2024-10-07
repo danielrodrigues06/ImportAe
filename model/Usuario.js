@@ -37,22 +37,8 @@ const Usuario = sequelize.define("Usuario", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+}, {
+  timestamps: true, // Certifique-se de que os timestamps estão habilitados
 });
-
-// Método para calcular a nota média do vendedor
-Usuario.prototype.getNotaMedia = async function () {
-  const avaliacoes = await Avaliacao.findAll({
-    where: {
-      vendedorId: this.id,
-      tipo: 'cliente_para_vendedor'
-    },
-    attributes: ['nota']
-  });
-
-  if (avaliacoes.length === 0) return null;
-
-  const somaNotas = avaliacoes.reduce((acc, avaliacao) => acc + avaliacao.nota, 0);
-  return (somaNotas / avaliacoes.length).toFixed(1);
-};
 
 module.exports = Usuario;

@@ -4,60 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/navbar.css">
+    <link rel="stylesheet" href="/stylesheets/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <title>Cadastrar Produto</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F2F2F2;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 70px; /* Ajuste de espaço para a altura da navbar */
+        }
+
+        .main-content {
+            flex: 1; /* Ocupa o máximo de espaço possível entre a navbar e o footer */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0; /* Adiciona espaçamento vertical */
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .register-container h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #003366;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #00AEEF;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            flex: 0 0 48%;
+        }
+
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Cadastrar Produto</h2>
-        <form action="/cadastrarProduto" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="nome">Nome do Produto:</label>
-                <input type="text" class="form-control" id="nome" name="nome" required />
-            </div>
+    <%- include('partials/navbar') %>
 
-            <div class="form-group">
-                <label for="descricao">Descrição:</label>
-                <textarea class="form-control" id="descricao" name="descricao"></textarea>
-            </div>
+    <div class="main-content">
+        <div class="register-container">
+            <h2>Cadastrar Produto</h2>
+            <form action="/cadastrarProduto" method="POST" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome">Nome do Produto:</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required />
+                    </div>
 
-            <div class="form-group">
-                <label for="preco">Preço (R$):</label>
-                <input type="number" class="form-control" id="preco" name="preco" step="0.01" required />
-            </div>
+                    <div class="form-group">
+                        <label for="preco">Preço (R$):</label>
+                        <input type="number" class="form-control" id="preco" name="preco" step="0.01" required />
+                    </div>
 
-            <div class="form-group">
-                <label for="imagem">Fotos do Produto (anexar até 5 imagens):</label>
-                <input type="file" class="form-control-file" id="imagem" name="imagem" accept="image/*" multiple required />
-            </div>
+                    <div class="form-group full-width">
+                        <label for="descricao">Descrição:</label>
+                        <textarea class="form-control" id="descricao" name="descricao"></textarea>
+                    </div>
 
-            <div class="form-group">
-                <label for="estoque">Quantidade:</label>
-                <input type="number" class="form-control" id="estoque" name="estoque" required />
-            </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoria:</label>
+                        <select class="form-control" id="categoria" name="categoria" required>
+                            <% categorias.forEach(function(categoria) { %>
+                                <option value="<%= categoria %>"><%= categoria %></option>
+                            <% }); %>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label for="categoria">Categoria:</label>
-                <select class="form-control" id="categoria" name="categoria" required>
-                    <% categorias.forEach(function(categoria) { %>
-                        <option value="<%= categoria %>"><%= categoria %></option>
-                    <% }); %>
-                </select>
-            </div>
+                    <div class="form-group">
+                        <label for="origem">Origem:</label>
+                        <select class="form-control" id="origem" name="origem" required>
+                            <option value="China">China</option>
+                            <option value="EUA">EUA</option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label for="origem">Origem:</label>
-                <select class="form-control" id="origem" name="origem" required>
-                    <option value="China">China</option>
-                    <option value="EUA">EUA</option>
-                </select>
-            </div>
+                    <div class="form-group">
+                        <label for="estoque">Quantidade:</label>
+                        <input type="number" class="form-control" id="estoque" name="estoque" required />
+                    </div>
 
-            <button type="submit" class="btn btn-primary">Cadastrar Produto</button>
-        </form>
+                    <div class="form-group full-width">
+                        <label for="imagem">Fotos do Produto (anexar até 5 imagens):</label>
+                        <input type="file" class="form-control-file" id="imagem" name="imagem" accept="image/*" multiple required />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3">Cadastrar Produto</button>
+            </form>
+        </div>
     </div>
 
+    <%- include('partials/footer') %>
+
     <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

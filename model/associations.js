@@ -23,6 +23,9 @@ Avaliacao.belongsTo(Usuario, { foreignKey: "clienteId", as: "cliente" });
 Usuario.hasMany(Avaliacao, { foreignKey: "vendedorId", as: "avaliacoesRecebidas" });
 Avaliacao.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedorAvaliacao" });
 
+Usuario.hasMany(Avaliacao, { foreignKey: "clienteId", as: "avaliacoesRecebidasCliente" });
+Avaliacao.belongsTo(Usuario, { foreignKey: "clienteId", as: "clienteAvaliacao" });
+
 Usuario.hasMany(Produto, { foreignKey: "vendedorId", as: "produtos" });
 Produto.belongsTo(Usuario, { foreignKey: "vendedorId", as: "vendedorProduto" });
 

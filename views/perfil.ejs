@@ -5,76 +5,196 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil de <%= usuario.nome %></title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/navbar.css">
+  <link rel="stylesheet" href="/stylesheets/footer.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      padding-top: 70px; /* Adiciona espaço para a navbar */
+      background-color: #F2F2F2;
+    }
+    .profile-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .profile-sidebar {
+      flex: 1;
+      max-width: 300px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .profile-sidebar img {
+      width: 150px; /* Define o tamanho da imagem */
+      height: 150px; /* Define o tamanho da imagem */
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+    .profile-content {
+      flex: 3;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-left: 20px;
+    }
+    .btn-primary {
+      background-color: #003366;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background-color: #00AEEF;
+    }
+    .btn-warning {
+      background-color: #FFC107;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+    .btn-warning:hover {
+      background-color: #FFB300;
+    }
+    .vendedor-info {
+      font-size: 0.9rem;
+      text-align: center;
+      color: #555;
+    }
+    .vendedor-info a {
+      color: #003366;
+      text-decoration: none;
+    }
+    .vendedor-info a:hover {
+      text-decoration: underline;
+    }
+    .vendedor-info .bi-star-fill {
+      color: #FFD700;
+    }
+    .star-rating {
+      color: #FFD700;
+    }
+  </style>
 </head>
 <body>
+  <%- include('partials/navbar') %>
   <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-8">
-        <h1>Perfil de <%= usuario.nome %></h1>
-        <img src="/imagens/<%= usuario.fotoPerfil || 'default.png' %>" alt="Foto do Usuário" class="img-fluid rounded-circle" width="150">
-        <p>Membro desde: <%= new Date(usuario.createdAt).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) %></p>
-        <a href="/chat?destinatarioId=<%= usuario.id %>" class="btn btn-info">Chat</a>
-
+    <div class="profile-container">
+      <div class="profile-sidebar">
+        <img src="/imagens/<%= usuario.fotoPerfil || 'default-profile.png' %>" alt="Foto do Usuário" class="img-fluid">
+        <p><strong>Membro desde:</strong> <%= new Date(usuario.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+        <% if (usuario.tipo === 'vendedor' && notaMedia) { %>
+          <p><strong>Nota Média:</strong> <%= notaMedia %>/5 <i class="bi bi-star-fill" style="color: #FFD700;"></i></p>
+        <% } %>
+        <a href="/chat?destinatarioId=<%= usuario.id %>" class="btn btn-info w-100 mb-3">Chat</a>
         <% if (usuario.tipo === 'vendedor') { %>
-          <h4>Importa de: <%= usuario.deOndeImporta %></h4>
-          <h4>Sobre</h4>
-          <p><%= usuario.sobreMim %></p>
-          <h4>Produtos</h4>
-          <div class="row">
-            <% usuario.produtos.forEach(produto => { %>
-              <div class="col-md-4">
-                <div class="card mb-4">
-                  <img src="/imagens/<%= produto.fotos[0] || 'default.png' %>" class="card-img-top" alt="Foto do Produto">
+          <button type="button" class="btn btn-warning w-100 mb-3" data-toggle="modal" data-target="#solicitacaoModal">Solicitar Produto</button>
+        <% } %>
+      </div>
+      <div class="profile-content">
+        <% if (usuario.tipo === 'vendedor') { %>
+          <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="pills-produtos-tab" data-toggle="pill" href="#pills-produtos" role="tab" aria-controls="pills-produtos" aria-selected="true">Produtos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="pills-avaliacoes-tab" data-toggle="pill" href="#pills-avaliacoes" role="tab" aria-controls="pills-avaliacoes" aria-selected="false">Avaliações</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-produtos" role="tabpanel" aria-labelledby="pills-produtos-tab">
+              <div class="row">
+                <% usuario.produtos.forEach(produto => { %>
+                  <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                      <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                              <img src="/imagens/<%= foto %>" class="card-img-top" alt="Foto do Produto">
+                            </div>
+                          <% }); %>
+                        </div>
+                        <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title"><%= produto.nome %></h5>
+                        <p class="card-text">R$ <%= produto.preco %></p>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pills-avaliacoes" role="tabpanel" aria-labelledby="pills-avaliacoes-tab">
+              <% avaliacoes.forEach(avaliacao => { %>
+                <div class="card mb-3">
                   <div class="card-body">
-                    <h5 class="card-title"><%= produto.nome %></h5>
-                    <p class="card-text">Preço: R$ <%= produto.preco %></p>
-                    <a href="/comprar/<%= produto.id %>" class="btn btn-primary">Comprar</a>
+                    <h5 class="card-title">Nota: <%= avaliacao.nota %>/5</h5>
+                    <div class="star-rating">
+                      <% for (let i = 1; i <= 5; i++) { %>
+                        <% if (i <= avaliacao.nota) { %>
+                          <i class="bi bi-star-fill"></i>
+                        <% } else { %>
+                          <i class="bi bi-star"></i>
+                        <% } %>
+                      <% } %>
+                    </div>
+                    <% if (avaliacao.compra && avaliacao.compra.produto) { %>
+                      <p>Produto Avaliado: <a href="/produtos/<%= avaliacao.compra.produto.id %>"><%= avaliacao.compra.produto.nome %></a></p>
+                    <% } %>
+                    <p>Comentário: <%= avaliacao.comentario %></p>
+                    <p>Avaliador: <%= avaliacao.cliente.nome %></p>
                   </div>
-                </div>
-              </div>
-            <% }); %>
-          </div>
-          <h4>Avaliações Recebidas</h4>
-          <div class="list-group">
-            <% if (notaMedia) { %>
-              <p>Nota Média: <%= notaMedia %>/5 estrelas</p>
-            <% } else { %>
-              <p>Este vendedor ainda não possui avaliações.</p>
-            <% } %>
-            <% avaliacoes.forEach(avaliacao => { %>
-              <div class="list-group-item">
-                <h5 class="mb-1"><%= avaliacao.cliente.nome %></h5>
-                <p class="mb-1"><%= avaliacao.comentario %></p>
-                <small>Nota: <%= avaliacao.nota %></small>
-                <% if (avaliacao.compra && avaliacao.compra.produto) { %>
-                  <p>Produto Avaliado: <a href="/produtos/<%= avaliacao.compra.produto.id %>"><%= avaliacao.compra.produto.nome %></a></p>
-                <% } %>
-                <% if (Array.isArray(avaliacao.fotos) && avaliacao.fotos.length > 0) { %>
-                  <div class="mt-2">
-                    <% avaliacao.fotos.forEach(foto => { %>
-                      <img src="/imagens/<%= foto %>" alt="Foto da Avaliação" class="img-fluid" width="100">
-                    <% }); %>
-                  </div>
-                <% } %>
-              </div>
-            <% }); %>
-          </div>
-          <!-- Botão para solicitar produto -->
-          <button type="button" class="btn btn-warning mt-4" data-toggle="modal" data-target="#solicitacaoModal">Solicitar Produto</button>
-        <% } else { %>
-          <h4>Compras Recentes</h4>
-          <div class="list-group">
-            <% if (usuario.compras.length > 0) { %>
-              <% usuario.compras.forEach(compra => { %>
-                <div class="list-group-item">
-                  <h5 class="mb-1"><%= compra.produto.nome %></h5>
-                  <p class="mb-1">Comprado em: <%= new Date(compra.createdAt).toLocaleDateString('pt-BR') %></p>
-                  <a href="/detalhesproduto/<%= compra.produto.id %>" class="btn btn-primary">Ver Produto</a>
                 </div>
               <% }); %>
-            <% } else { %>
-              <p>Você ainda não realizou nenhuma compra.</p>
-            <% } %>
+            </div>
+          </div>
+        <% } else { %>
+          <h3>Compras Recentes</h3>
+          <div class="row">
+            <% usuario.compras.forEach(compra => { %>
+              <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                  <div id="carousel<%= compra.produto.id %>" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      <% JSON.parse(compra.produto.fotos).forEach((foto, index) => { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                          <img src="/imagens/<%= foto %>" class="card-img-top" alt="Foto do Produto">
+                        </div>
+                      <% }); %>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel<%= compra.produto.id %>" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel<%= compra.produto.id %>" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title"><%= compra.produto.nome %></h5>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
           </div>
         <% } %>
       </div>
@@ -116,6 +236,7 @@
     </div>
   </div>
 
+  <%- include('partials/footer') %>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

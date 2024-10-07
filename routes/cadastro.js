@@ -63,15 +63,15 @@ router.post("/", async function (req, res) {
         sobreMim = fields["sobreMim"] ? fields["sobreMim"][0] : null;
 
         // Verificação de imagem obrigatória para vendedores
-        if (!files.imagem[0] || files.imagem[0].size === 0) {
+        if (!files.fotoPerfil || !files.fotoPerfil[0] || files.fotoPerfil[0].size === 0) {
           console.error("Foto de perfil é obrigatória para vendedores.");
           return res.redirect("/cadastro?erro=6"); // Erro para foto obrigatória
         }
       }
 
       // Processamento da imagem (opcional para clientes, obrigatória para vendedores)
-      if (files.imagem[0] && files.imagem[0].size > 0) {
-        const file = files.imagem[0];
+      if (files.fotoPerfil && files.fotoPerfil[0] && files.fotoPerfil[0].size > 0) {
+        const file = files.fotoPerfil[0];
         const hash = crypto
           .createHash("md5")
           .update(Date.now().toString())
@@ -91,10 +91,10 @@ router.post("/", async function (req, res) {
           return res.redirect("/cadastro?erro=4");
         }
 
-        nomeimg = hash + "." + files.imagem[0].mimetype.split("/")[1];
+        nomeimg = hash + "." + file.mimetype.split("/")[1];
         const newpath = path.join(__dirname, "../public/imagens/", nomeimg);
 
-        fs.rename(files.imagem[0].filepath, newpath, function (err) {
+        fs.rename(file.filepath, newpath, function (err) {
           if (err) {
             console.error(err);
             return res.redirect("/cadastro?erro=1");

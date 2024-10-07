@@ -84,6 +84,18 @@ function clienteMiddleware(req, res, next) {
   res.status(403).send("Acesso negado: apenas clientes podem acessar esta rota.");
 }
 
+
+// Sincronização das tabelas com o banco de dados
+sequelize
+    .sync({ alter: true })
+    .then(() => {
+        console.log("Todas as tabelas foram sincronizadas!");
+    })
+    .catch((error) => {
+        console.error("Erro ao sincronizar as tabelas:", error);
+    });
+
+    
 // Aplicação das rotas com middlewares
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
