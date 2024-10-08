@@ -61,7 +61,7 @@ router.get('/:id', async (req, res) => {
                     order: [['createdAt', 'DESC']]
                 }
             ],
-            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim', 'createdAt'] // Inclua createdAt
+            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim'] // Remova createdAt
         });
 
         if (!usuario) {

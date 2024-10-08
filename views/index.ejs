@@ -1,21 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importae - Sua Loja de Importados</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/navbar.css">
     <link rel="stylesheet" href="/stylesheets/footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css"> <!-- Adicione esta linha -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <style>
+      body {
+        font-family: 'Montserrat', sans-serif;
+      }
+      .hero-section {
+        background-color: #00AEEF;
+        color: #fff;
+        text-align: center;
+        padding: 50px 0;
+      }
+      .hero-section h1 {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      .hero-section p {
+        font-size: 1.5rem;
+      }
+      .btn-primary {
+        background-color: #003366;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: bold;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #00AEEF;
+      }
+      .features-section {
+        padding: 50px 0;
+      }
+      .feature {
+        text-align: center;
+      }
+      .feature i {
+        font-size: 3rem;
+        color: #00AEEF;
+      }
+      .feature h3 {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #003366;
+      }
+      .feature p {
+        color: #555;
+      }
+    </style>
   </head>
   <body>
     <%- include('partials/navbar') %>
-    <div class="content">
-      <h1><%= title %></h1>
-      <p>Welcome to <%= title %></p>
-    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <h1>Bem-vindo à Importae</h1>
+        <p>Os melhores produtos importados com a qualidade que você merece</p>
+        <a href="/produtos" class="btn btn-primary">Ver Produtos</a>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 feature">
+            <i class="bi bi-truck"></i>
+            <h3>Entrega Rápida</h3>
+            <p>Produtos importados com entrega rápida e segura para todo o Brasil.</p>
+          </div>
+          <div class="col-md-4 feature">
+            <i class="bi bi-wallet2"></i>
+            <h3>Preços Competitivos</h3>
+            <p>Compre os melhores produtos pelo menor preço do mercado.</p>
+          </div>
+          <div class="col-md-4 feature">
+            <i class="bi bi-shield-check"></i>
+            <h3>Garantia de Qualidade</h3>
+            <p>Todos os produtos com garantia e procedência certificada.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <%- include('partials/footer') %>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,6 +1,5 @@
 const sequelize = require("../db.js");
 const { DataTypes } = require("sequelize");
-const Avaliacao = require("./Avaliacao");
 
 const Usuario = sequelize.define("Usuario", {
   id: {
@@ -37,8 +36,6 @@ const Usuario = sequelize.define("Usuario", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-}, {
-  timestamps: true, // Certifique-se de que os timestamps estão habilitados
 });
 
 module.exports = Usuario;

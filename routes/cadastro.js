@@ -11,6 +11,8 @@ var saltRounds = 10;
 router.get("/", function (req, res) {
   res.render("registro", {
     title: "cadastro",
+    success: req.flash('success'),
+    error: req.flash('error')
   });
 });
 
@@ -21,7 +23,8 @@ router.post("/", async function (req, res) {
     form.parse(req, async (err, fields, files) => {
       if (err) {
         console.error(err);
-        return res.redirect("/cadastro?erro=1");
+        req.flash('error', 'Erro ao processar o formulário.');
+        return res.redirect("/cadastro");
       }
 
       const senha = fields["senha"][0];
@@ -33,12 +36,14 @@ router.post("/", async function (req, res) {
         fields.email[0].length == 0 ||
         fields.nome[0].length == 0
       ) {
-        return res.redirect("/cadastro?erro=5");
+        req.flash('error', 'Todos os campos são obrigatórios.');
+        return res.redirect("/cadastro");
       }
 
       if (senha !== rsenha) {
         console.error("As senhas não coincidem.");
-        return res.redirect("/cadastro?erro=2");
+        req.flash('error', 'As senhas não coincidem.');
+        return res.redirect("/cadastro");
       }
 
       const existeUser = await Usuario.findOne({
@@ -46,7 +51,8 @@ router.post("/", async function (req, res) {
       });
       if (existeUser) {
         console.error("Email já cadastrado.");
-        return res.redirect("/cadastro?erro=3");
+        req.flash('error', 'Email já cadastrado.');
+        return res.redirect("/cadastro");
       }
 
       const hashedPassword = await bcrypt.hash(senha, saltRounds);
@@ -65,7 +71,8 @@ router.post("/", async function (req, res) {
         // Verificação de imagem obrigatória para vendedores
         if (!files.fotoPerfil || !files.fotoPerfil[0] || files.fotoPerfil[0].size === 0) {
           console.error("Foto de perfil é obrigatória para vendedores.");
-          return res.redirect("/cadastro?erro=6"); // Erro para foto obrigatória
+          req.flash('error', 'Foto de perfil é obrigatória para vendedores.');
+          return res.redirect("/cadastro");
         }
       }
 
@@ -88,7 +95,8 @@ router.post("/", async function (req, res) {
           ].includes(fileExt)
         ) {
           console.log("O arquivo de imagem não possui uma extensão válida");
-          return res.redirect("/cadastro?erro=4");
+          req.flash('error', 'O arquivo de imagem não possui uma extensão válida.');
+          return res.redirect("/cadastro");
         }
 
         nomeimg = hash + "." + file.mimetype.split("/")[1];
@@ -97,7 +105,8 @@ router.post("/", async function (req, res) {
         fs.rename(file.filepath, newpath, function (err) {
           if (err) {
             console.error(err);
-            return res.redirect("/cadastro?erro=1");
+            req.flash('error', 'Erro ao salvar a imagem.');
+            return res.redirect("/cadastro");
           }
           console.log("Arquivo de imagem enviado com sucesso");
         });
@@ -116,11 +125,13 @@ router.post("/", async function (req, res) {
         fotoPerfil: nomeimg,  // Salva a foto se enviada, independente do tipo
       });
 
-      return res.redirect("/login?erro=0");
+      req.flash('success', 'Cadastro realizado com sucesso!');
+      return res.redirect("/cadastro?success=true");
     });
   } catch (err) {
     console.error(err);
-    res.redirect("/cadastro?erro=1");
+    req.flash('error', 'Erro ao realizar o cadastro.');
+    res.redirect("/cadastro");
   }
 });
 

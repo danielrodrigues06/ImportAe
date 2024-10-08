@@ -90,10 +90,15 @@
   <div class="container mt-5">
     <div class="profile-container">
       <div class="profile-sidebar">
+        <h2>Perfil de <%= usuario.nome %></h2> <!-- Adiciona o nome do usuário -->
         <img src="/imagens/<%= usuario.fotoPerfil || 'default-profile.png' %>" alt="Foto do Usuário" class="img-fluid">
         <p><strong>Membro desde:</strong> <%= new Date(usuario.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
         <% if (usuario.tipo === 'vendedor' && notaMedia) { %>
           <p><strong>Nota Média:</strong> <%= notaMedia %>/5 <i class="bi bi-star-fill" style="color: #FFD700;"></i></p>
+        <% } %>
+        <% if (usuario.tipo === 'vendedor') { %>
+          <p><strong>De Onde Importa:</strong> <%= usuario.deOndeImporta %></p> <!-- Adiciona De Onde Importa -->
+          <p><strong>Sobre Mim:</strong> <%= usuario.sobreMim %></p> <!-- Adiciona Sobre Mim -->
         <% } %>
         <a href="/chat?destinatarioId=<%= usuario.id %>" class="btn btn-info w-100 mb-3">Chat</a>
         <% if (usuario.tipo === 'vendedor') { %>
@@ -134,7 +139,7 @@
                         </a>
                       </div>
                       <div class="card-body">
-                        <h5 class="card-title"><%= produto.nome %></h5>
+                        <h5 class="card-title"><a href="/produtos/<%= produto.id %>"><%= produto.nome %></a></h5> <!-- Adiciona o link para a rota de detalhes do produto -->
                         <p class="card-text">R$ <%= produto.preco %></p>
                       </div>
                     </div>
@@ -190,7 +195,7 @@
                     </a>
                   </div>
                   <div class="card-body">
-                    <h5 class="card-title"><%= compra.produto.nome %></h5>
+                    <h5 class="card-title"><a href="/produtos/<%= compra.produto.id %>"><%= compra.produto.nome %></a></h5> <!-- Adiciona o link para a rota de detalhes do produto -->
                   </div>
                 </div>
               </div>

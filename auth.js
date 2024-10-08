@@ -17,7 +17,7 @@ module.exports = function (passport) {
     try {
       let user = await Usuario.findOne({
         where: {
-          id: obj.id, // Ajuste para acessar a propriedade `id` correta do objeto
+          id: obj.id,
         },
       });
       done(null, user);
@@ -33,7 +33,7 @@ module.exports = function (passport) {
         try {
           const user = await Usuario.findOne({ where: { email: email } });
           if (!user) {
-            return done(null, false, { message: "Usuário não encontrado" });
+            return done(null, false, { message: "Email não encontrado" });
           }
           const isValid = bcrypt.compareSync(senha, user.senha);
           if (!isValid) {

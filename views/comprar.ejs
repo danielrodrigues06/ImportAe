@@ -6,7 +6,64 @@
     <title>Compra de Produto</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/navbar.css">
+    <link rel="stylesheet" href="/stylesheets/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #F2F2F2;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 70px; /* Ajuste de espaço para a altura da navbar */
+        }
+
+        .main-content {
+            flex: 1; /* Ocupa o máximo de espaço possível entre a navbar e o footer */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0; /* Adiciona espaçamento vertical */
+        }
+
+        .checkout-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .checkout-container h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #003366;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .btn-primary {
+            background-color: #003366;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #00AEEF;
+        }
+
         .carousel-item img {
             max-height: 400px; /* Ajuste a altura máxima da imagem */
             object-fit: cover; /* Ajuste a imagem para cobrir o espaço disponível */
@@ -14,71 +71,73 @@
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h1>Você está comprando <%= produto.nome %></h1>
+    <%- include('partials/navbar') %>
 
-                <!-- Exibindo as fotos do produto -->
-                <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
-                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
-                            </div>
-                        <% }); %>
-                    </div>
-                    <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+    <div class="main-content">
+        <div class="checkout-container">
+            <h2>Você está comprando <%= produto.nome %></h2>
+
+            <!-- Exibindo as fotos do produto -->
+            <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
+                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                            <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+                        </div>
+                    <% }); %>
+                </div>
+                <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+            <p class="mt-2">Preço: R$ <%= produto.preco %></p>
+            <p class="mt-2">Estoque disponível: <%= produto.estoque %></p>
+
+            <% if (typeof erro !== 'undefined') { %>
+                <div class="alert alert-danger"><%= erro %></div>
+            <% } %>
+
+            <form action="/comprar/<%= produto.id %>" method="POST">
+                <div class="form-group">
+                    <label for="nomeCompleto">Nome completo:</label>
+                    <input type="text" id="nomeCompleto" name="nomeCompleto" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" name="cpf" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" name="endereco" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="formaPagamento">Forma de pagamento:</label>
+                    <select id="formaPagamento" name="formaPagamento" class="form-control" required>
+                        <option value="pix">PIX</option>
+                        <option value="cartao">Cartão</option>
+                    </select>
                 </div>
 
-                <p class="mt-2">Preço: <%= produto.preco %></p>
-                <p class="mt-2">Estoque disponível: <%= produto.estoque %></p>
-
-                <% if (typeof erro !== 'undefined') { %>
-                    <div class="alert alert-danger"><%= erro %></div>
-                <% } %>
-
-                <form action="/comprar/<%= produto.id %>" method="POST">
-                    <div class="form-group">
-                        <label for="nomeCompleto">Nome completo:</label>
-                        <input type="text" id="nomeCompleto" name="nomeCompleto" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cpf">CPF:</label>
-                        <input type="text" id="cpf" name="cpf" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="endereco">Endereço:</label>
-                        <input type="text" id="endereco" name="endereco" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="formaPagamento">Forma de pagamento:</label>
-                        <select id="formaPagamento" name="formaPagamento" class="form-control" required>
-                            <option value="pix">PIX</option>
-                            <option value="cartao">Cartão</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="quantidade">Quantidade:</label>
-                        <input type="number" id="quantidade" name="quantidade" class="form-control" required min="1" max="<%= produto.estoque %>">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Comprar</button>
-                </form>
-            </div>
+                <div class="form-group">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" id="quantidade" name="quantidade" class="form-control" required min="1" max="<%= produto.estoque %>">
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 mt-3">Comprar</button>
+            </form>
         </div>
     </div>
+
+    <%- include('partials/footer') %>
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

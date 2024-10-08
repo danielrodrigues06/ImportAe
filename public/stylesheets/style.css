@@ -1,4 +1,28 @@
+/* public/stylesheets/style.css */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.content {
+  flex: 1;
+  padding-top: 70px; /* Altura da navbar */
+  padding-bottom: 50px; /* Altura do footer */
+}body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;

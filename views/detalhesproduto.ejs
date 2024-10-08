@@ -308,7 +308,7 @@
         <div class="vendedor-info border p-3">
           <h4 class="text-center">Vendedor</h4> <!-- Título do Vendedor -->
           <img src="/imagens/<%= produto.vendedorProduto.fotoPerfil || 'default.png' %>" alt="Foto do Vendedor">
-          <h5><a href="/perfil/vendedor/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto.nome %></a></h5>
+          <h5><a href="/perfil/<%= produto.vendedorProduto.id %>"><%= produto.vendedorProduto.nome %></a></h5>
 
           <hr> <!-- Linha minimalista -->
 
