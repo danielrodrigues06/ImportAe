@@ -7,15 +7,18 @@ const Compra = require("../model/Compra");
 const Avaliacao = require("../model/Avaliacao");
 const { Op, fn, col } = require("sequelize");
 
-// Rota para listar todos os produtos
 router.get("/", async (req, res) => {
   try {
-    const query = req.query.q ? req.query.q : "";
+    const query = req.query.q || "";
     const precoMin = req.query.precoMin ? parseFloat(req.query.precoMin) : 0;
     const precoMax = req.query.precoMax ? parseFloat(req.query.precoMax) : Number.MAX_VALUE;
-    const origem = req.query.origem ? req.query.origem : "";
+    const origem = req.query.origem || "";
 
-    // Condições de filtro
+    // Paginação
+    const page = parseInt(req.query.page) || 1; // Pega a página atual, default 1
+    const pageSize = 6; // Número de produtos por página
+    const offset = (page - 1) * pageSize;
+
     const conditions = {
       [Op.and]: [
         {
@@ -29,12 +32,17 @@ router.get("/", async (req, res) => {
       ],
     };
 
-    const produtos = await Produto.findAll({
+    // Consultar produtos com paginação
+    const { rows: produtos, count: totalProdutos } = await Produto.findAndCountAll({
       where: conditions,
       include: [{ model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] }],
+      limit: pageSize,
+      offset: offset,
     });
 
-    res.render("produtos", { produtos });
+    const totalPages = Math.ceil(totalProdutos / pageSize); // Total de páginas
+
+    res.render("produtos", { produtos, page, totalPages });
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     res.status(500).send("Erro ao buscar produtos");
