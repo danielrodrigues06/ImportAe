@@ -9,6 +9,10 @@ const { Op } = require('sequelize');
 // Rota para exibir o perfil do usuário (vendedor ou cliente)
 router.get('/:id', async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = 3; // Número de produtos por página
+        const offset = (page - 1) * pageSize;
+
         const usuario = await Usuario.findByPk(req.params.id, {
             include: [
                 {
@@ -52,7 +56,9 @@ router.get('/:id', async (req, res) => {
                 {
                     model: Produto,
                     as: 'produtos',
-                    attributes: ['id', 'nome', 'preco', 'fotos', 'estoque']
+                    attributes: ['id', 'nome', 'preco', 'fotos', 'estoque'],
+                    limit: pageSize,
+                    offset: offset
                 },
                 {
                     model: Compra,
@@ -61,7 +67,7 @@ router.get('/:id', async (req, res) => {
                     order: [['createdAt', 'DESC']]
                 }
             ],
-            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim'] // Remova createdAt
+            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim']
         });
 
         if (!usuario) {
@@ -86,7 +92,11 @@ router.get('/:id', async (req, res) => {
         });
         const notaMediaCliente = avaliacoesCliente.length > 0 ? (avaliacoesCliente.reduce((acc, avaliacao) => acc + avaliacao.nota, 0) / avaliacoesCliente.length).toFixed(1) : null;
 
-        res.render('perfil', { usuario, notaMedia, avaliacoes, notaMediaCliente, avaliacoesCliente });
+        // Total de produtos para paginação
+        const totalProdutos = await Produto.count({ where: { vendedorId: req.params.id } });
+        const totalPages = Math.ceil(totalProdutos / pageSize);
+
+        res.render('perfil', { usuario, notaMedia, avaliacoes, notaMediaCliente, avaliacoesCliente, totalPages, currentPage: page });
     } catch (error) {
         console.error('Erro ao buscar perfil do usuário:', error);
         res.status(500).send('Erro ao buscar perfil do usuário');
