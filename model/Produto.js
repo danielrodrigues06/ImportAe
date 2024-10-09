@@ -45,6 +45,10 @@ const Produto = sequelize.define("Produto", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+},
 });
 
 Usuario.hasMany(Produto, { foreignKey: "vendedorId" });

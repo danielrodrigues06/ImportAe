@@ -5,6 +5,7 @@ const Avaliacao = require('../model/Avaliacao');
 const Produto = require('../model/Produto');
 const Compra = require('../model/Compra');
 const { Op } = require('sequelize');
+const moment = require('moment'); // Importa a biblioteca moment
 
 // Rota para exibir o perfil do usuário (vendedor ou cliente)
 router.get('/:id', async (req, res) => {
@@ -67,12 +68,15 @@ router.get('/:id', async (req, res) => {
                     order: [['createdAt', 'DESC']]
                 }
             ],
-            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim']
+            attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim', 'createdAt']
         });
 
         if (!usuario) {
             return res.status(404).send('Usuário não encontrado');
         }
+
+        // Formata a data de criação do usuário
+        usuario.createdAtFormatted = moment(usuario.createdAt).format('DD/MM/YYYY');
 
         // Calcular a nota média do vendedor, se aplicável
         const avaliacoes = usuario.avaliacoesRecebidas.map(avaliacao => {

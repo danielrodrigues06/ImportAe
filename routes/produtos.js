@@ -6,6 +6,7 @@ const Comentario = require("../model/Comentario");
 const Compra = require("../model/Compra");
 const Avaliacao = require("../model/Avaliacao");
 const { Op, fn, col } = require("sequelize");
+const moment = require("moment"); // Importa a biblioteca moment
 
 router.get("/", async (req, res) => {
   try {
@@ -54,8 +55,8 @@ router.get("/:id", async (req, res) => {
   try {
     const produto = await Produto.findByPk(req.params.id, {
       include: [
-        { model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil"] },
-        { model: Comentario, as: "comentarios", include: [{ model: Usuario, as: "usuario", attributes: ["id", "nome", "fotoPerfil"] }] }
+        { model: Usuario, as: "vendedorProduto", attributes: ["id", "nome", "fotoPerfil", "createdAt"] },
+        { model: Comentario, as: "comentarios", include: [{ model: Usuario, as: "usuario", attributes: ["id", "nome", "fotoPerfil", "createdAt"] }] }
       ],
     });
 
@@ -69,6 +70,12 @@ router.get("/:id", async (req, res) => {
       attributes: [[fn('AVG', col('nota')), 'notaMedia']]
     });
     const numeroAvaliacoes = await Avaliacao.count({ where: { vendedorId: produto.vendedorProduto.id, tipo: 'cliente_para_vendedor' } });
+
+    // Formata as datas de criação
+    produto.vendedorProduto.createdAtFormatted = moment(produto.vendedorProduto.createdAt).format('DD/MM/YYYY');
+    produto.comentarios.forEach(comentario => {
+      comentario.usuario.createdAtFormatted = moment(comentario.usuario.createdAt).format('DD/MM/YYYY');
+    });
 
     res.render("detalhesProduto", { produto, vendas, notaMedia: notaMedia.dataValues.notaMedia, numeroAvaliacoes, user: req.user });
   } catch (error) {

@@ -36,6 +36,10 @@ const Usuario = sequelize.define("Usuario", {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+},
 });
 
 module.exports = Usuario;

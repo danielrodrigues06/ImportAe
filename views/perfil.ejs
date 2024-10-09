@@ -95,9 +95,9 @@
   <div class="container mt-5">
     <div class="profile-container">
       <div class="profile-sidebar">
-        <h2>Perfil de <%= usuario.nome %></h2> <!-- Adiciona o nome do usuário -->
+        <h2>Perfil de <%= usuario.nome %></h2>
         <img src="/imagens/<%= usuario.fotoPerfil || 'default-profile.png' %>" alt="Foto do Usuário" class="img-fluid">
-        <p><strong>Membro desde:</strong> <%= new Date(usuario.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+        <p><strong>Data de Criação:</strong> <%= usuario.createdAtFormatted %></p> <!-- Adiciona a data de criação formatada -->
         <% if (usuario.tipo === 'vendedor' && notaMedia) { %>
           <p><strong>Nota Média:</strong> <%= notaMedia %>/5 <i class="bi bi-star-fill" style="color: #FFD700;"></i></p>
         <% } %>

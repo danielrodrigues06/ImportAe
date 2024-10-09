@@ -33,6 +33,10 @@ const Comentario = sequelize.define("Comentario", {
     },
     allowNull: false,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+},
 });
 
 module.exports = Comentario;
