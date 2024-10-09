@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const passport = require("passport");
 const session = require("express-session");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const createError = require('http-errors');
 const flash = require("connect-flash");
 const sequelize = require("./db");
@@ -40,32 +41,41 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Configuração da sessão com SequelizeStore
 app.use(
   session({
     secret: "secret",
+    store: new SequelizeStore({
+      db: sequelize,
+    }),
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 30 * 60 * 1000, // 30 minutos
+    },
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(authenticationMiddleware);
 
 app.use(flash());
+
+// Middleware global para definir variáveis locais
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.user = req.user || null;
+  res.locals.logado = req.isAuthenticated();
+  next();
+});
 
 // Middleware de autenticação
 function authenticationMiddleware(req, res, next) {
   if (req.isAuthenticated()) {
-    res.locals.isAuthenticated = true;
-    res.locals.user = req.user;
-    res.locals.logado = true;
+    return next();
   } else {
-    res.locals.isAuthenticated = false;
-    res.locals.user = null;
-    res.locals.logado = false;
+    return res.redirect('/login'); // Redireciona para a página de login se não estiver autenticado
   }
-  next();
 }
 
 // Middleware específico para vendedores
@@ -84,7 +94,6 @@ function clienteMiddleware(req, res, next) {
   res.status(403).send("Acesso negado: apenas clientes podem acessar esta rota.");
 }
 
-
 // Sincronização das tabelas com o banco de dados
 sequelize
     .sync({ alter: true })
@@ -95,7 +104,6 @@ sequelize
         console.error("Erro ao sincronizar as tabelas:", error);
     });
 
-    
 // Aplicação das rotas com middlewares
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -112,8 +120,6 @@ app.use('/avaliacao', authenticationMiddleware, avaliacaoRouter);
 app.use('/perfil', authenticationMiddleware, perfilRouter);
 app.use('/comentarios', authenticationMiddleware, comentariosRouter);
 app.use('/solicitacoes', authenticationMiddleware, solicitacoesRouter);
-
-
 
 // Tratamento de erros
 app.use(function (req, res, next) {

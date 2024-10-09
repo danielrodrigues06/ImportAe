@@ -10,6 +10,7 @@ module.exports = function (passport) {
       email: user.email,
       tipo: user.tipo,
       fotoPerfil: user.fotoPerfil,
+      telefone: user.telefone,
     });
   });
 

@@ -65,6 +65,10 @@ const Compra = sequelize.define("Compra", {
     type: DataTypes.JSON,
     allowNull: true,
   },
+  codigoRastreio: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = Compra;

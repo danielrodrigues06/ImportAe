@@ -4,7 +4,7 @@ const Produto = require("../model/Produto");
 const Usuario = require("../model/Usuario");
 const Compra = require("../model/Compra");
 const Avaliacao = require("../model/Avaliacao");
-const Solicitacao = require("../model/Solicitacao"); // Adicione esta linha
+const Solicitacao = require("../model/Solicitacao");
 const path = require('path');
 const multer = require('multer');
 
@@ -18,6 +18,12 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+// Função para validar o código de rastreio
+function validarCodigoRastreio(codigo) {
+  const regex = /^[A-Z]{2}\d{9}[A-Z]{2}$/;
+  return regex.test(codigo);
+}
 
 // Painel do vendedor - mostra perfil, produtos, compras e solicitações
 router.get("/", async (req, res) => {
@@ -83,9 +89,6 @@ router.post("/editar-produto/:id", upload.array('foto', 5), async (req, res) => 
     const updateData = { nome, descricao, preco, categoria, origem, estoque };
 
     if (req.files.length > 0) {
-      if (req.files.length < 3) {
-        return res.status(400).send("Por favor, envie pelo menos 3 fotos.");
-      }
       const fotosArray = req.files.map(file => file.filename); // Captura os nomes dos arquivos enviados
       updateData.fotos = fotosArray;
     }
@@ -152,6 +155,32 @@ router.post("/adicionar-fotos/:id", upload.array('fotos', 5), async (req, res) =
   } catch (error) {
     console.error("Erro ao adicionar fotos:", error);
     res.status(500).send("Erro ao adicionar fotos.");
+  }
+});
+
+// Adicionar código de rastreio
+router.post("/adicionar-rastreio/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { codigoRastreio } = req.body;
+
+    if (!validarCodigoRastreio(codigoRastreio)) {
+      req.flash('error', 'Código de rastreio inválido. Deve seguir o padrão dos Correios.');
+      return res.redirect("/painelVendedor");
+    }
+
+    const compra = await Compra.findByPk(id);
+    if (!compra || compra.vendedorId !== req.user.id) {
+      return res.status(404).send("Compra não encontrada ou acesso negado.");
+    }
+
+    compra.codigoRastreio = codigoRastreio;
+    await compra.save();
+
+    res.redirect("/painelVendedor");
+  } catch (error) {
+    console.error("Erro ao adicionar código de rastreio:", error);
+    res.status(500).send("Erro ao adicionar código de rastreio.");
   }
 });
 

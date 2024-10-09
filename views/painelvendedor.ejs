@@ -221,6 +221,15 @@
                         <button type="submit" class="btn btn-primary mt-2">Atualizar Status</button>
                       </form>
                     </td>
+                    <!-- Dentro da tabela de compras -->
+                    <td>
+                      <form action="/painelvendedor/adicionar-rastreio/<%= compra.id %>" method="POST">
+                        <div class="form-group">
+                          <input type="text" name="codigoRastreio" class="form-control" placeholder="Código de Rastreio" value="<%= compra.codigoRastreio %>">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Adicionar Rastreio</button>
+                      </form>
+                    </td>
                     <td>
                       <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
                       <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#adicionarFotosModal<%= compra.id %>">Adicionar Fotos</button>
@@ -271,6 +280,15 @@
                       <% } %>
                     </td>
                   </tr>
+
+                  <td>
+                    <form action="/painelvendedor/adicionar-rastreio/<%= compra.id %>" method="POST">
+                      <div class="form-group">
+                        <input type="text" name="codigoRastreio" class="form-control" placeholder="Código de Rastreio" value="<%= compra.codigoRastreio %>">
+                      </div>
+                      <button type="submit" class="btn btn-primary mt-2">Adicionar Rastreio</button>
+                    </form>
+                  </td>
                 <% }); %>
               </tbody>
             </table>
