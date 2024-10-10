@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
     const precoMin = req.query.precoMin ? parseFloat(req.query.precoMin) : 0;
     const precoMax = req.query.precoMax ? parseFloat(req.query.precoMax) : Number.MAX_VALUE;
     const origem = req.query.origem || "";
+    const categoria = req.query.categoria || "";
 
     // Paginação
     const page = parseInt(req.query.page) || 1; // Pega a página atual, default 1
@@ -30,6 +31,7 @@ router.get("/", async (req, res) => {
         },
         { preco: { [Op.between]: [precoMin, precoMax] } },
         origem ? { origem: origem } : {},
+        categoria ? { categoria: categoria } : {},
       ],
     };
 

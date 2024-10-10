@@ -18,6 +18,10 @@
   margin-right: 10px;
 }
 
+.navbar-nav {
+  margin-left: 400px; /* Reduz a margem à esquerda para aproximar do campo de pesquisa */
+}
+
 .navbar-nav .nav-link {
   color: #F2F2F2 !important;
 }
@@ -58,14 +62,45 @@
   color: #003366 !important;
 }
 
-.header-login-btn {
-  background-color: #28A745;
+.header-login-btn,
+.header-btn {
   color: #F2F2F2;
+  margin-left: 10px; /* Adiciona margem à esquerda */
   margin-right: 10px; /* Adiciona margem à direita */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px; /* Ajuste o padding conforme necessário */
+  border-radius: 5px; /* Bordas arredondadas para o botão */
+  font-weight: bold; /* Deixa o texto em negrito */
+  border: none; /* Remove a borda do botão */
+}
+
+.header-login-btn {
+  background-color: #28A745; /* Cor do botão de login */
 }
 
 .header-btn {
-  background-color: #FF7F0E;
-  color: #F2F2F2;
-  margin-left: 10px; /* Adiciona margem à esquerda */
+  background-color: #FF7F0E; /* Cor do botão de cadastro */
+}
+
+.dropdown-menu .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dropdown-menu .col-md-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.navbar-nav.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Estiliza o link "Categorias" */
+.navbar-nav .nav-link.dropdown-toggle {
+  font-weight: bold; /* Deixa o texto em negrito */
+  font-size: 1.25rem; /* Aumenta o tamanho do texto */
 }

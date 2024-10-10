@@ -1,102 +1,191 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importae - Sua Loja de Importados</title>
+    <title>ImportAê - Plataforma Simplificadora de Importação</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/navbar.css">
     <link rel="stylesheet" href="/stylesheets/footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <style>
-      body {
-        font-family: 'Montserrat', sans-serif;
-      }
-      .hero-section {
-        background-color: #00AEEF;
-        color: #fff;
-        text-align: center;
-        padding: 50px 0;
-      }
-      .hero-section h1 {
-        font-size: 3rem;
-        font-weight: bold;
-      }
-      .hero-section p {
-        font-size: 1.5rem;
-      }
-      .btn-primary {
-        background-color: #003366;
-        border: none;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: bold;
-        padding: 15px 30px;
-        font-size: 1.2rem;
-        transition: background-color 0.3s ease;
-      }
-      .btn-primary:hover {
-        background-color: #00AEEF;
-      }
-      .features-section {
-        padding: 50px 0;
-      }
-      .feature {
-        text-align: center;
-      }
-      .feature i {
-        font-size: 3rem;
-        color: #00AEEF;
-      }
-      .feature h3 {
-        margin-top: 20px;
-        font-weight: bold;
-        color: #003366;
-      }
-      .feature p {
-        color: #555;
-      }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f9;
+        }
+        .hero-section {
+            position: relative;
+            background-image: url('/imagens/indexfrente.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 100px 0;
+        }
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Sobreposição escura */
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        .hero-content h1 {
+            font-weight: 700; /* Negrito */
+        }
+        .advantages-section {
+            background-color: #f8f9fa;
+        }
+        .advantage-item img {
+            max-width: 80px;
+            margin-bottom: 20px;
+        }
+        .advantage-item h3 {
+            color: #007bff;
+        }
+        .advantage-item p {
+            color: #6c757d;
+        }
+        .how-it-works-section {
+            background-color: #fff;
+        }
+        .how-it-works-section h2 {
+            color: #007bff;
+        }
+        .how-it-works-section p, .how-it-works-section ul {
+            color: #6c757d;
+        }
+        .how-it-works-section a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .about-author-section {
+            background-color: #f8f9fa;
+            padding: 50px 0;
+        }
+        .about-author-section h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .about-author-section h3 {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .about-author-section h4 {
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+        .about-author-section p {
+            color: #6c757d;
+        }
+        .about-author-section .author-photo {
+            max-width: 250px; /* Aumentar o tamanho da foto */
+            border-radius: 15px; /* Cantos arredondados */
+            border: 5px solid #007bff; /* Borda arredondada */
+        }
+        .about-author-section .social-icons a {
+            color: #007bff;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
     </style>
-  </head>
-  <body>
-    <%- include('partials/navbar') %>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container">
-        <h1>Bem-vindo à Importae</h1>
-        <p>Os melhores produtos importados com a qualidade que você merece</p>
-        <a href="/produtos" class="btn btn-primary">Ver Produtos</a>
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4 feature">
-            <i class="bi bi-truck"></i>
-            <h3>Entrega Rápida</h3>
-            <p>Produtos importados com entrega rápida e segura para todo o Brasil.</p>
-          </div>
-          <div class="col-md-4 feature">
-            <i class="bi bi-wallet2"></i>
-            <h3>Preços Competitivos</h3>
-            <p>Compre os melhores produtos pelo menor preço do mercado.</p>
-          </div>
-          <div class="col-md-4 feature">
-            <i class="bi bi-shield-check"></i>
-            <h3>Garantia de Qualidade</h3>
-            <p>Todos os produtos com garantia e procedência certificada.</p>
-          </div>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  <main class="fade-in">
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-content">
+            <img src="/imagens/logoimportae.png" alt="ImportAê Logo" class="hero-logo">
+            <h1>ImportAê</h1>
+            <p>Sua plataforma de importação de produtos</p>
+            <a href="#advantages-section" class="btn btn-primary mt-3">Explore as Vantagens</a>
         </div>
+    </div>
+      <!-- Advantages Section -->
+      <div id="advantages-section" class="advantages-section py-5">
+          <div class="container">
+              <div class="row text-center">
+                  <div class="col-md-4">
+                      <div class="advantage-item">
+                          <i class="bi bi-shield-lock mb-3" style="font-size: 3rem; color: #007bff;"></i>
+                          <h3>Comunicação Segura</h3>
+                          <p>Garantimos uma comunicação segura e eficiente com nossos clientes e importadores.</p>
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="advantage-item">
+                          <i class="bi bi-gear mb-3" style="font-size: 3rem; color: #007bff;"></i>
+                          <h3>Processos Simplificados</h3>
+                          <p>Nossa plataforma simplifica todo o processo de importação para você.</p>
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="advantage-item">
+                          <i class="bi bi-box-seam mb-3" style="font-size: 3rem; color: #007bff;"></i>
+                          <h3>Melhores Produtos</h3>
+                          <p>Encontre na nossa plataforma os melhores produtos importados da atualidade.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
-    </section>
-
-    <%- include('partials/footer') %>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
+      <!-- How It Works Section -->
+      <div class="how-it-works-section py-5">
+          <div class="container">
+              <h2 class="text-center mb-4">Como Funciona?</h2>
+              <div class="row">
+                  <div class="col-md-12">
+                      <p>Nossa plataforma permite que você escolha o produto que deseja importar e conectamos você diretamente com o importador. O pagamento é feito diretamente com o importador, garantindo transparência e segurança. Você poderá ver fotos do produto e da embalagem antes do envio, para ter certeza da qualidade e das condições de transporte.</p>
+                      <ul>
+                          <li>Escolha seu produto na nossa plataforma.</li>
+                          <li>Conectamos você com o importador.</li>
+                          <li>Pagamento direto com o importador.</li>
+                          <li>Veja fotos do produto e da embalagem antes do envio.</li>
+                      </ul>
+                      <a href="/produtos">Explore nossos produtos</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- About the Author Section -->
+      <div class="about-author-section">
+          <div class="container">
+              <h2>Sobre o Autor</h2>
+              <div class="row align-items-center">
+                  <div class="col-md-4 text-center">
+                      <img src="/imagens/autor.png" alt="Foto do Autor" class="author-photo">
+                  </div>
+                  <div class="col-md-8">
+                      <h3>Daniel Luis</h3>
+                      <h4>Programação para Internet - 4° ano - IFSul Câmpus Gravataí</h4>
+                      <p>Olá, meu nome é Daniel Luis. Sou o criador da plataforma ImportAê. Tenho paixão por tecnologia e comércio internacional, e criei esta plataforma para facilitar o processo de importação para todos.</p>
+                      <p>Orientador do projeto<br>Prof. Me. Felipe Leivas Teixeira</p>
+                      <div class="social-icons">
+                          <a href="https://br.linkedin.com/in/daniel-luis-antunes-rodrigues-9643a327b" target="_blank"><i class="bi bi-linkedin"></i></a>
+                          <a href="https://github.com/danielrodrigues06" target="_blank"><i class="bi bi-github"></i></a>
+                          <a href="https://www.instagram.com/daniellrod" target="_blank"><i class="bi bi-instagram"></i></a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </main>
+  <%- include('partials/footer') %>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/', function(req, res) {
-    const categorias = ['Categoria1', 'Categoria2', 'Categoria3']; // Exemplo de categorias
+    const categorias = ['Eletrônicos', 'Roupas', 'Livros', 'Móveis', 'Brinquedos', 'Ferramentas', 'Beleza', 'Esportes', 'Automotivo', 'Alimentos']; // Novas categorias
     res.render('cadastrarproduto', { categorias: categorias, success: req.flash('success'), error: req.flash('error') });
 });
 
