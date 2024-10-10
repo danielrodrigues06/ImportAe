@@ -22,14 +22,25 @@ const upload = multer({ storage: storage });
 
 router.get('/', function(req, res) {
     const categorias = ['Categoria1', 'Categoria2', 'Categoria3']; // Exemplo de categorias
-    res.render('cadastrarproduto', { categorias: categorias });
+    res.render('cadastrarproduto', { categorias: categorias, success: req.flash('success'), error: req.flash('error') });
 });
 
 // Rota para cadastrar produto com upload de imagens
 router.post('/', upload.array('imagem', 5), async (req, res) => {
-    const { nome, descricao, preco, categoria, origem, estoque} = req.body;
+    const { nome, descricao, preco, categoria, origem, estoque } = req.body;
     
     try {
+        // Validações no backend
+        if (descricao.length < 50) {
+            req.flash('error', 'A descrição deve ter no mínimo 50 caracteres.');
+            return res.redirect('/cadastrarProduto');
+        }
+
+        if (req.files.length < 3) {
+            req.flash('error', 'Por favor, anexe no mínimo 3 imagens.');
+            return res.redirect('/cadastrarProduto');
+        }
+
         const fotosArray = req.files.map(file => file.filename); // Captura os nomes dos arquivos enviados
 
         await Produto.create({
@@ -43,10 +54,12 @@ router.post('/', upload.array('imagem', 5), async (req, res) => {
             vendedorId: req.user.id,
         });
 
-        res.redirect('/produtos'); // Redireciona para a página de produtos cadastrados
+        req.flash('success', 'Produto cadastrado com sucesso!');
+        return res.redirect('/cadastrarProduto');
     } catch (error) {
         console.error('Erro ao cadastrar produto:', error);
-        res.status(500).send('Erro ao cadastrar produto.');
+        req.flash('error', 'Erro ao cadastrar produto.');
+        return res.redirect('/cadastrarProduto');
     }
 });
 

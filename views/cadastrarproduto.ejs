@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/stylesheets/footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <title>Cadastrar Produto</title>
     <style>
         body {
@@ -77,6 +78,10 @@
             flex: 0 0 100%;
         }
 
+        .custom-file-input ~ .custom-file-label::after {
+            content: "Selecionar";
+        }
+
         footer {
             background-color: #003366;
             color: white;
@@ -91,21 +96,24 @@
     <div class="main-content">
         <div class="register-container">
             <h2>Cadastrar Produto</h2>
-            <form action="/cadastrarProduto" method="POST" enctype="multipart/form-data">
+            <form id="produtoForm" action="/cadastrarProduto" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nome">Nome do Produto:</label>
                         <input type="text" class="form-control" id="nome" name="nome" required />
+                        <div class="invalid-feedback">Por favor, insira o nome do produto.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="preco">Preço (R$):</label>
                         <input type="number" class="form-control" id="preco" name="preco" step="0.01" required />
+                        <div class="invalid-feedback">Por favor, insira um preço válido.</div>
                     </div>
 
                     <div class="form-group full-width">
                         <label for="descricao">Descrição:</label>
-                        <textarea class="form-control" id="descricao" name="descricao"></textarea>
+                        <textarea class="form-control" id="descricao" name="descricao" minlength="50" required></textarea>
+                        <div class="invalid-feedback">A descrição deve ter no mínimo 50 caracteres.</div>
                     </div>
 
                     <div class="form-group">
@@ -115,6 +123,7 @@
                                 <option value="<%= categoria %>"><%= categoria %></option>
                             <% }); %>
                         </select>
+                        <div class="invalid-feedback">Por favor, selecione uma categoria.</div>
                     </div>
 
                     <div class="form-group">
@@ -123,16 +132,22 @@
                             <option value="China">China</option>
                             <option value="EUA">EUA</option>
                         </select>
+                        <div class="invalid-feedback">Por favor, selecione a origem do produto.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="estoque">Quantidade:</label>
                         <input type="number" class="form-control" id="estoque" name="estoque" required />
+                        <div class="invalid-feedback">Por favor, insira a quantidade em estoque.</div>
                     </div>
 
                     <div class="form-group full-width">
                         <label for="imagem">Fotos do Produto (anexar até 5 imagens):</label>
-                        <input type="file" class="form-control-file" id="imagem" name="imagem" accept="image/*" multiple required />
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="imagem" name="imagem" accept="image/*" multiple required />
+                            <label class="custom-file-label" for="imagem">Escolha os arquivos</label>
+                            <div class="invalid-feedback">Por favor, anexe no mínimo 3 imagens.</div>
+                        </div>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mt-3">Cadastrar Produto</button>
@@ -146,5 +161,36 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        const files = document.getElementById('imagem').files;
+                        if (!form.checkValidity() || files.length < 3) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            if (files.length < 3) {
+                                document.getElementById('imagem').classList.add('is-invalid');
+                            }
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        <% if (success && success.length > 0) { %>
+            toastr.success('<%= success %>');
+            setTimeout(function() {
+                window.location.href = '/produtos';
+            }, 1000); // Espera 1 segundo antes de redirecionar
+        <% } %>
+        <% if (error && error.length > 0) { %>
+            toastr.error('<%= error %>');
+        <% } %>
+    </script>
 </body>
 </html>

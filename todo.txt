@@ -1,9 +1,11 @@
 AVISOS - CADASTRADO COM SUCESSO LOGADO COM SUCESSO ETC ETC (EM DESENVOLVIMENTO LOGIN E CADASTRO PRONTO)
 VALIDACAO DE FORMULARIOS (minimo max)
-PAGINATOR PARA: Avaliacoes / perfil
+
+
+Erro Chat - desconhecido
+PAGINATOR PARA: Avaliacoes - erfil
 Estilizar perfil - tirar compras recentes e deixar só avaliacoes (cliente)
 
-TIMESTAMPS / PERGUNTAR PRO PROFESSOR
 
 ESTILIZAR MELHOR 
 
