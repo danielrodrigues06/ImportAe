@@ -17,7 +17,7 @@
     .carousel-item img {
       cursor: pointer;
       width: 100%;
-      height: 200px; /* Diminuir a altura da imagem do produto */
+      height: 400px; /* Diminuir a altura da imagem do produto */
       object-fit: cover;
       border-radius: 10px;
     }
@@ -328,11 +328,33 @@
 
     </div>
   </div>
+<!-- Modal para exibir a imagem do produto em tamanho grande -->
+<div class="modal fade" id="imagemModal" tabindex="-1" role="dialog" aria-labelledby="imagemModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img src="" id="imagemExpandida" style="width: 100%;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <%- include('partials/footer') %>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.querySelectorAll('.carousel-item img').forEach(item => {
+      item.addEventListener('click', function() {
+        var src = this.getAttribute('src');
+        document.getElementById('imagemExpandida').setAttribute('src', src);
+        $('#imagemModal').modal('show');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -6,15 +6,15 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 
-// Configuração do multer para upload de arquivos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/imagens'); // Diretório onde as imagens serão salvas
     },
     filename: (req, file, cb) => {
         const hash = crypto.createHash("md5").update(Date.now().toString()).digest("hex");
+        const randomBytes = crypto.randomBytes(4).toString('hex'); // Gera um identificador aleatório
         const fileExt = path.extname(file.originalname);
-        cb(null, `${hash}${fileExt}`); // Nome do arquivo com hash e extensão original
+        cb(null, `${hash}-${randomBytes}${fileExt}`); // Nome do arquivo com hash, identificador aleatório e extensão original
     }
 });
 
