@@ -69,6 +69,7 @@
           <img src="/imagens/<%= user.fotoPerfil %>" alt="Foto do Usuário" class="perfil-img dropdown-toggle" style="width: 50px; height: 50px; border-radius: 50%;" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
             <span class="dropdown-item">Olá, <%= user.nome %>!</span>
+            <a class="dropdown-item" href="/perfil/<%= user.id %>">Meu Perfil</a> <!-- Adiciona o link para o perfil do usuário -->
             <% if (user.tipo === 'vendedor') { %>
               <a class="dropdown-item" href="/painelvendedor">Painel do Vendedor</a>
             <% } else if (user.tipo === 'cliente') { %>

@@ -3,7 +3,7 @@ const router = express.Router();
 const Usuario = require('../model/Usuario');
 const Avaliacao = require('../model/Avaliacao');
 const Produto = require('../model/Produto');
-const Compra = require('../model/Compra');
+const Compra = require('../model/Compra'); // Adicione esta linha
 const { Op } = require('sequelize');
 const moment = require('moment'); // Importa a biblioteca moment
 
@@ -60,12 +60,6 @@ router.get('/:id', async (req, res) => {
                     attributes: ['id', 'nome', 'preco', 'fotos', 'estoque'],
                     limit: pageSize,
                     offset: offset
-                },
-                {
-                    model: Compra,
-                    as: 'compras',
-                    include: [{ model: Produto, as: 'produto', attributes: ['id', 'nome', 'fotos'] }],
-                    order: [['createdAt', 'DESC']]
                 }
             ],
             attributes: ['id', 'nome', 'email', 'tipo', 'fotoPerfil', 'deOndeImporta', 'sobreMim', 'createdAt']

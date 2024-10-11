@@ -18,7 +18,11 @@ router.get("/", function (req, res) {
 
 router.post("/", async function (req, res) {
   try {
-    const form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm({
+      allowEmptyFiles: true,  // Permite arquivos vazios
+      minFileSize: 0  // Aceita arquivos com tamanho 0 bytes
+    });
+    
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
@@ -84,22 +88,16 @@ router.post("/", async function (req, res) {
           .update(Date.now().toString())
           .digest("hex");
 
-        const fileExt = file.mimetype.toLowerCase();
+        const fileExt = file.mimetype.split("/")[1].toLowerCase();
         if (
-          ![
-            "image/jpg",
-            "image/webp",
-            "image/jpeg",
-            "image/png",
-            "image/gif",
-          ].includes(fileExt)
+          !["jpg", "jpeg", "png", "gif", "webp"].includes(fileExt)
         ) {
           console.log("O arquivo de imagem não possui uma extensão válida");
           req.flash('error', 'O arquivo de imagem não possui uma extensão válida.');
           return res.redirect("/cadastro");
         }
 
-        nomeimg = hash + "." + file.mimetype.split("/")[1];
+        nomeimg = hash + "." + fileExt;
         const newpath = path.join(__dirname, "../public/imagens/", nomeimg);
 
         fs.rename(file.filepath, newpath, function (err) {
@@ -110,6 +108,9 @@ router.post("/", async function (req, res) {
           }
           console.log("Arquivo de imagem enviado com sucesso");
         });
+      } else {
+        // Caso não tenha imagem enviada, usar imagem padrão
+        nomeimg = 'default-profile.png';
       }
 
       // Criação do usuário com base na model
@@ -122,7 +123,7 @@ router.post("/", async function (req, res) {
         tipo: tipoUsuario,  // Cliente ou vendedor
         deOndeImporta: tipoUsuario === "vendedor" ? deOndeImporta : null, // Apenas para vendedores
         sobreMim: tipoUsuario === "vendedor" ? sobreMim : null, // Apenas para vendedores
-        fotoPerfil: nomeimg,  // Salva a foto se enviada, independente do tipo
+        fotoPerfil: nomeimg,  // Salva a foto ou a imagem padrão
       });
 
       req.flash('success', 'Cadastro realizado com sucesso!');
@@ -135,4 +136,4 @@ router.post("/", async function (req, res) {
   }
 });
 
-module.exports = router;       
+module.exports = router;

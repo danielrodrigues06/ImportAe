@@ -7,9 +7,9 @@ const passport = require("passport");
 const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const createError = require('http-errors');
-const flash = require("connect-flash");
+const flash = require('connect-flash');
 const sequelize = require("./db");
-const associations = require('./model/associations'); // Importando associações
+const associations = require('./model/associations'); 
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -60,6 +60,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  next();
+});
 
 // Middleware global para definir variáveis locais
 app.use((req, res, next) => {
