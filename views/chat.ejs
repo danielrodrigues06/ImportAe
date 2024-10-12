@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Privado</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/chat.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/navbar.css">
+    <link rel="stylesheet" href="/stylesheets/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <style>
         #mensagensContainer {
             border: 1px solid #ccc;
@@ -13,26 +18,30 @@
             margin-bottom: 20px;
             height: 300px;
             overflow-y: scroll;
+            background-color: #fff;
         }
         .mensagem {
             margin-bottom: 10px;
-        }
-        #chatsRecentes {
-            border: 1px solid #ccc;
             padding: 10px;
-            height: 300px;
-            overflow-y: scroll;
+            border-radius: 5px;
+            background-color: #e9ecef;
+        }
+        .mensagem p {
+            margin: 0;
+        }
+        .mensagem small {
+            display: block;
+            margin-top: 5px;
+            color: #6c757d;
         }
         .perfil-img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            object-fit: cover;
+            margin-right: 10px;
         }
         .img-thumbnail {
             width: 100px;
-            height: 100px;
-            object-fit: cover;
             cursor: pointer;
         }
         .img-expanded {
@@ -43,7 +52,6 @@
             max-width: 90%;
             max-height: 90%;
             z-index: 1050;
-            cursor: pointer;
         }
         .overlay {
             position: fixed;
@@ -51,46 +59,75 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1040;
+        }
+        .btn-primary {
+            background-color: #003366;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #002244;
+        }
+        .input-group-text {
+            background-color: #003366;
+            color: #fff;
+            border: none;
+        }
+        .input-group-text:hover {
+            background-color: #002244;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Chat Privado</h1>
-        <div class="row">
-            <!-- Aba lateral com chats recentes -->
-            <div class="col-md-3">
-                <h4>Chats Recentes</h4>
-                <div id="chatsRecentes">
-                    <% chatsRecentes.forEach(chat => { %>
-                        <div class="chat-recent">
-                            <a href="/chat?destinatarioId=<%= chat.usuarioId === usuario.id ? chat.destinatarioId : chat.usuarioId %>">
-                                <% if (chat.usuarioId === usuario.id && chat.destinatario) { %>
-                                    <img src="/imagens/<%= chat.destinatario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
-                                    <%= chat.destinatario.nome %>
-                                <% } else if (chat.usuario && chat.usuario.fotoPerfil) { %>
-                                    <img src="/imagens/<%= chat.usuario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
-                                    <%= chat.usuario.nome %>
-                                <% } else { %>
-                                    <img src="/imagens/default.png" alt="Foto de Perfil" class="perfil-img">
-                                    Desconhecido
-                                <% } %>
-                            </a>
+    <%- include('partials/navbar') %>
+    <div class="content">
+        <div class="container mt-5">
+            <h1>Chat Privado</h1>
+            <div class="row">
+                <!-- Aba lateral com chats recentes -->
+                <div class="col-md-3">
+                    <h4>Chats Recentes</h4>
+                    <div id="chatsRecentes">
+                        <% chatsRecentes.forEach(chat => { %>
+                            <div class="chat-recent">
+                                <a href="/chat?destinatarioId=<%= chat.usuarioId === usuario.id ? chat.destinatarioId : chat.usuarioId %>">
+                                    <% if (chat.usuarioId === usuario.id && chat.destinatario) { %>
+                                        <img src="/imagens/<%= chat.destinatario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
+                                        <%= chat.destinatario.nome %>
+                                    <% } else if (chat.usuario && chat.usuario.fotoPerfil) { %>
+                                        <img src="/imagens/<%= chat.usuario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img">
+                                        <%= chat.usuario.nome %>
+                                    <% } else { %>
+                                        <img src="/imagens/default.png" alt="Foto de Perfil" class="perfil-img">
+                                        Desconhecido
+                                    <% } %>
+                                </a>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="/imagens/<%= destinatario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img mr-3">
+                        <h4><a href="/perfil/<%= destinatario.id %>"><%= destinatario.nome %></a></h4>
+                    </div>
+                    <div id="mensagensContainer" class="mb-3"></div>
+                    <div class="input-group mb-3">
+                        <textarea id="mensagemTexto" class="form-control" placeholder="Digite sua mensagem aqui..."></textarea>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="imagem">
+                                <i class="bi bi-paperclip"></i>
+                            </label>
+                            <input type="file" id="imagem" class="d-none">
+                            <button onclick="enviarMensagem()" class="btn btn-primary">
+                                <i class="bi bi-send"></i>
+                            </button>
                         </div>
-                    <% }); %>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-9">
-                <div class="d-flex align-items-center mb-3">
-                    <img src="/imagens/<%= destinatario.fotoPerfil %>" alt="Foto de Perfil" class="perfil-img mr-3">
-                    <h4><%= destinatario.nome %></h4>
-                </div>
-                <div id="mensagensContainer" class="mb-3"></div>
-                <textarea id="mensagemTexto" class="form-control mb-3" placeholder="Digite sua mensagem aqui..."></textarea>
-                <input type="file" id="imagem" class="form-control mb-3">
-                <button onclick="enviarMensagem()" class="btn btn-primary">Enviar</button>
             </div>
         </div>
     </div>
@@ -107,7 +144,7 @@
                     if (mensagem.imagem) {
                         mensagensHtml += `<img src="/imagens/${mensagem.imagem}" alt="Imagem" class="img-thumbnail" onclick="expandirImagem(this)">`;
                     }
-                    mensagensHtml += `<p class="data">${new Date(mensagem.createdAt).toLocaleString()}</p>
+                    mensagensHtml += `<small>${new Date(mensagem.createdAt).toLocaleString()}</small>
                     </div>`;
                 });
                 document.getElementById('mensagensContainer').innerHTML = mensagensHtml;

@@ -96,6 +96,11 @@
     <div class="main-content">
         <div class="register-container">
             <h2>Cadastrar Produto</h2>
+            <% if (error && error.length > 0) { %>
+                <div class="alert alert-danger">
+                    <%= error %>
+                </div>
+            <% } %>
             <form id="produtoForm" action="/cadastrarProduto" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 <div class="form-row">
                     <div class="form-group">

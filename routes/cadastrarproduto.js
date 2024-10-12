@@ -3,7 +3,6 @@ const router = express.Router();
 const Produto = require('../model/Produto');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const crypto = require('crypto');
 
 const storage = multer.diskStorage({
@@ -55,7 +54,7 @@ router.post('/', upload.array('imagem', 5), async (req, res) => {
         });
 
         req.flash('success', 'Produto cadastrado com sucesso!');
-        return res.redirect('/cadastrarProduto');
+        return res.redirect('/produtos'); // Redireciona para a página de produtos após o cadastro bem-sucedido
     } catch (error) {
         console.error('Erro ao cadastrar produto:', error);
         req.flash('error', 'Erro ao cadastrar produto.');

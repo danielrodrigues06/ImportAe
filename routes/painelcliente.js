@@ -58,10 +58,12 @@ router.post("/editar-perfil", upload.single('fotoPerfil'), async (req, res) => {
     }
 
     await Usuario.update(updateData, { where: { id: req.user.id } });
+    req.flash('success', 'Perfil editado com sucesso!');
     res.redirect("/painelCliente");
   } catch (error) {
     console.error("Erro ao editar perfil do cliente:", error);
-    res.status(500).send("Erro ao editar o perfil do cliente.");
+    req.flash('error', 'Erro ao editar o perfil do cliente.');
+    res.redirect("/painelCliente");
   }
 });
 

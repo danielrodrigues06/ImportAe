@@ -191,6 +191,8 @@
       border: 1px solid #ddd;
       border-radius: 10px;
       background-color: #f9f9f9;
+      max-width: 100%; /* Limita a largura máxima */
+      overflow-wrap: break-word; /* Quebra a linha se necessário */
     }
     .qa-divider {
       border-top: 1px solid #ddd;
@@ -264,13 +266,15 @@
 
         <div class="qa-section">
           <h4>PERGUNTAS E RESPOSTAS</h4>
-          <form action="/comentarios/<%= produto.id %>" method="POST">
-            <div class="form-group">
-              <label for="comentario">Faça uma pergunta:</label>
-              <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
-          </form>
+          <% if (user && user.id !== produto.vendedorProduto.id) { %>
+            <form action="/comentarios/<%= produto.id %>" method="POST">
+              <div class="form-group">
+                <label for="comentario">Faça uma pergunta:</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="3" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+          <% } %>
 
           <div class="mt-4">
             <% produto.comentarios.forEach(comentario => { %>

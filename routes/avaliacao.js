@@ -1,25 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 const Avaliacao = require('../model/Avaliacao');
 const Compra = require('../model/Compra');
 const Usuario = require('../model/Usuario');
-
-// Configuração do multer para upload de arquivos
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/imagens');
-    },
-    filename: (req, file, cb) => {
-        const hash = crypto.createHash("md5").update(Date.now().toString()).digest("hex");
-        const fileExt = path.extname(file.originalname);
-        cb(null, `${hash}${fileExt}`);
-    }
-});
-
-const upload = multer({ storage: storage });
 
 // Rota para criar uma nova avaliação pelo vendedor
 router.post('/vendedor/:compraId', async (req, res) => {
@@ -59,14 +44,16 @@ router.post('/vendedor/:compraId', async (req, res) => {
             tipo: 'vendedor_para_cliente' // Adicionando tipo na criação
         });
 
+        req.flash('success', 'Avaliação enviada com sucesso!');
         res.redirect('/painelVendedor'); // Redireciona para o painel do vendedor
     } catch (error) {
         console.error('Erro ao criar avaliação:', error);
+        req.flash('error', 'Erro ao criar avaliação.');
         res.status(500).send('Erro ao criar avaliação.');
     }
 });
 
-router.post('/:compraId', upload.array('fotos', 5), async (req, res) => {
+router.post('/:compraId', async (req, res) => {
     const { nota, comentario } = req.body;
     const { compraId } = req.params;
     const clienteId = req.user.id;
@@ -93,21 +80,20 @@ router.post('/:compraId', upload.array('fotos', 5), async (req, res) => {
             return res.status(400).send('Você já avaliou esta compra.');
         }
 
-        const fotosArray = req.files.map(file => file.filename);
-
         await Avaliacao.create({
             nota,
             comentario,
-            fotos: fotosArray,
             clienteId,
             vendedorId: compra.vendedorId, // Acessando o vendedorId corretamente
             compraId: compra.id,
             tipo: 'cliente_para_vendedor' // Adicionando tipo na criação
         });
 
+        req.flash('success', 'Avaliação enviada com sucesso!');
         res.redirect('/painelCliente'); // Redireciona para o painel do cliente
     } catch (error) {
         console.error('Erro ao criar avaliação:', error);
+        req.flash('error', 'Erro ao criar avaliação.');
         res.status(500).send('Erro ao criar avaliação.');
     }
 });

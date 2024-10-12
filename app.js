@@ -72,6 +72,8 @@ app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   res.locals.user = req.user || null;
   res.locals.logado = req.isAuthenticated();
+  res.locals.success = req.flash('success'); // Adiciona a variável success globalmente
+  res.locals.error = req.flash('error'); // Adiciona a variável error globalmente
   next();
 });
 
