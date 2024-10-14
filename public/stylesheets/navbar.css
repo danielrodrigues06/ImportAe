@@ -19,7 +19,7 @@
 }
 
 .navbar-nav {
-  margin-left: 400px; /* Reduz a margem à esquerda para aproximar do campo de pesquisa */
+  margin-left: auto; /* Centraliza a barra de navegação */
 }
 
 .navbar-nav .nav-link {

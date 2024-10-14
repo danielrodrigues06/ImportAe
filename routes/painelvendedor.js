@@ -7,6 +7,7 @@ const Avaliacao = require("../model/Avaliacao");
 const Solicitacao = require("../model/Solicitacao");
 const path = require('path');
 const multer = require('multer');
+const bcrypt = require("bcryptjs");
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -66,17 +67,47 @@ router.get("/", async (req, res) => {
 // Editar perfil do vendedor
 router.post("/editar-perfil", upload.single('fotoPerfil'), async (req, res) => {
   try {
-    const { nome, email, telefone, deOndeImporta, sobreMim } = req.body;
+    const { nome, email, telefone, deOndeImporta, sobreMim, senha } = req.body;
     const fotoPerfil = req.file ? req.file.filename : null;
     const updateData = { nome, email, telefone, deOndeImporta, sobreMim };
+
     if (fotoPerfil) {
       updateData.fotoPerfil = fotoPerfil;
     }
+
+    if (senha) {
+      const hashedPassword = await bcrypt.hash(senha, 10);
+      updateData.senha = hashedPassword;
+    }
+
     await Usuario.update(updateData, { where: { id: req.user.id } });
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao editar perfil:", error);
     res.status(500).send("Erro ao editar o perfil.");
+  }
+});
+
+// Excluir perfil do vendedor
+router.post("/excluir-perfil", async (req, res) => {
+  try {
+    const { confirmSenha } = req.body;
+    const vendedor = await Usuario.findByPk(req.user.id);
+
+    const isMatch = await bcrypt.compare(confirmSenha, vendedor.senha);
+    if (!isMatch) {
+      req.flash('error', 'Senha incorreta.');
+      return res.redirect("/painelVendedor");
+    }
+
+    await Usuario.destroy({ where: { id: req.user.id } });
+    req.logout();
+    req.flash('success', 'Conta excluída com sucesso.');
+    res.redirect("/");
+  } catch (error) {
+    console.error("Erro ao excluir perfil do vendedor:", error);
+    req.flash('error', 'Erro ao excluir o perfil do vendedor.');
+    res.redirect("/painelVendedor");
   }
 });
 

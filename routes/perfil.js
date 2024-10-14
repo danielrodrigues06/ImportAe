@@ -94,7 +94,7 @@ router.get('/:id', async (req, res) => {
         const totalProdutos = await Produto.count({ where: { vendedorId: req.params.id } });
         const totalPages = Math.ceil(totalProdutos / pageSize);
 
-        res.render('perfil', { usuario, notaMedia, avaliacoes, notaMediaCliente, avaliacoesCliente, totalPages, currentPage: page });
+        res.render('perfil', { usuario, notaMedia, avaliacoes, notaMediaCliente, avaliacoesCliente, totalPages, currentPage: page, user: req.user });
     } catch (error) {
         console.error('Erro ao buscar perfil do usuário:', error);
         res.status(500).send('Erro ao buscar perfil do usuário');

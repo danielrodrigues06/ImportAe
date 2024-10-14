@@ -69,6 +69,11 @@ const Compra = sequelize.define("Compra", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  quantidade: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+  },
 });
 
 module.exports = Compra;

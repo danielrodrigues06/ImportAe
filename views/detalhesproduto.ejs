@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/stylesheets/footer.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+  
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
@@ -320,7 +321,12 @@
 
           <hr> <!-- Linha minimalista -->
 
-          <p>Nota Média: <%= notaMedia %>/5</p>
+          <p>Nota: 
+            <%= Math.round(notaMedia) %>/5 
+            <% for (let i = 1; i <= 5; i++) { %>
+              <i class="bi bi-star<%= i <= Math.round(notaMedia) ? '-fill' : '' %>" style="color: #FFD700;"></i>
+            <% } %>
+          </p>
 
           <hr> <!-- Linha minimalista -->
 

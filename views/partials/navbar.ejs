@@ -10,54 +10,55 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-    <!-- Barra de Pesquisa -->
-    <form class="form-inline my-2 my-lg-0 search-bar" action="/produtos" method="GET">
-      <input class="form-control mr-sm-2" type="search" placeholder="Buscar produtos" aria-label="Search" name="q">
-      <button class="btn my-2 my-sm-0" type="submit">
-        <i class="bi bi-search"></i> <!-- Ícone de pesquisa do Bootstrap -->
-      </button>
-    </form>
-
-    <!-- Dropdown de Categorias -->
-    <ul class="navbar-nav ml-2">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="categoriasDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Categorias
-        </a>
-        <div class="dropdown-menu" aria-labelledby="categoriasDropdown">
-          <a class="dropdown-item" href="/produtos?categoria=Eletrônicos">
-            <i class="fas fa-tv"></i> Eletrônicos
+    <!-- Barra de Pesquisa e Categorias -->
+    <div class="d-flex align-items-center w-100">
+      <form class="form-inline my-2 my-lg-0 search-bar" action="/produtos" method="GET">
+        <input class="form-control mr-sm-2" type="search" placeholder="Buscar produtos" aria-label="Search" name="q">
+        <button class="btn my-2 my-sm-0" type="submit">
+          <i class="bi bi-search"></i> <!-- Ícone de pesquisa do Bootstrap -->
+        </button>
+      </form>
+      <!-- Dropdown de Categorias -->
+      <ul class="navbar-nav ml-2">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="categoriasDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Categorias
           </a>
-          <a class="dropdown-item" href="/produtos?categoria=Roupas">
-            <i class="fas fa-tshirt"></i> Roupas
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Livros">
-            <i class="fas fa-book"></i> Livros
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Móveis">
-            <i class="fas fa-couch"></i> Móveis
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Brinquedos">
-            <i class="fas fa-puzzle-piece"></i> Brinquedos
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Ferramentas">
-            <i class="fas fa-wrench"></i> Ferramentas
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Beleza">
-            <i class="fas fa-heart"></i> Beleza
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Esportes">
-            <i class="fas fa-basketball-ball"></i> Esportes
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Automotivo">
-            <i class="fas fa-car"></i> Automotivo
-          </a>
-          <a class="dropdown-item" href="/produtos?categoria=Alimentos">
-            <i class="fas fa-utensils"></i> Alimentos
-          </a>
-        </div>
-      </li>
-    </ul>
+          <div class="dropdown-menu" aria-labelledby="categoriasDropdown">
+            <a class="dropdown-item" href="/produtos?categoria=Eletrônicos">
+              <i class="fas fa-tv"></i> Eletrônicos
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Roupas">
+              <i class="fas fa-tshirt"></i> Roupas
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Livros">
+              <i class="fas fa-book"></i> Livros
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Móveis">
+              <i class="fas fa-couch"></i> Móveis
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Brinquedos">
+              <i class="fas fa-puzzle-piece"></i> Brinquedos
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Ferramentas">
+              <i class="fas fa-wrench"></i> Ferramentas
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Beleza">
+              <i class="fas fa-heart"></i> Beleza
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Esportes">
+              <i class="fas fa-basketball-ball"></i> Esportes
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Automotivo">
+              <i class="fas fa-car"></i> Automotivo
+            </a>
+            <a class="dropdown-item" href="/produtos?categoria=Alimentos">
+              <i class="fas fa-utensils"></i> Alimentos
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
 
     <!-- Dropdown com todas as opções -->
     <div class="navbar-nav">

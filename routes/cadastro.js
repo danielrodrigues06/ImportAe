@@ -22,7 +22,6 @@ router.post("/", async function (req, res) {
       allowEmptyFiles: true,  // Permite arquivos vazios
       minFileSize: 0  // Aceita arquivos com tamanho 0 bytes
     });
-    
 
     form.parse(req, async (err, fields, files) => {
       if (err) {
@@ -127,7 +126,7 @@ router.post("/", async function (req, res) {
       });
 
       req.flash('success', 'Cadastro realizado com sucesso!');
-      return res.redirect("/cadastro?success=true");
+      return res.redirect("/login");
     });
   } catch (err) {
     console.error(err);

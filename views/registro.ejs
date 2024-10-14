@@ -81,7 +81,7 @@
   </style>
   <script>
     function toggleFields() {
-      const tipo = document.getElementById("tipo").value;
+      const tipo = document.querySelector('input[name="tipo"]:checked').value;
       const vendedorFields = document.getElementById("vendedorFields");
       const fotoPerfil = document.getElementById("fotoPerfil");
 
@@ -166,11 +166,17 @@
           </div>
           <div class="col-md-6">
             <div class="mb-3">
-              <label for="tipo" class="form-label">Tipo de Usuário:</label>
-              <select id="tipo" name="tipo" class="form-select" onchange="toggleFields()" required>
-                <option value="cliente">Cliente</option>
-                <option value="vendedor">Vendedor</option>
-              </select>
+              <label class="form-label">Tipo de Usuário:</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="tipo" id="cliente" value="cliente" onchange="toggleFields()" required>
+                  <label class="form-check-label" for="cliente">Cliente</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="tipo" id="vendedor" value="vendedor" onchange="toggleFields()" required>
+                  <label class="form-check-label" for="vendedor">Vendedor</label>
+                </div>
+              </div>
               <div class="invalid-feedback">Por favor, selecione um tipo de usuário.</div>
             </div>
           </div>

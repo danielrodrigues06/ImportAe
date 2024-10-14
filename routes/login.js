@@ -20,7 +20,7 @@ router.post('/', (req, res, next) => {
         return next(err);
       }
       req.flash('success', 'Login realizado com sucesso!');
-      return res.redirect('/login?success=true');
+      return res.redirect('/');
     });
   })(req, res, next);
 });

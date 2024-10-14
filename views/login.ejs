@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/stylesheets/footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
       .login-container {
         display: flex;
@@ -71,6 +70,12 @@
     <div class="login-container">
         <div class="login-card">
             <h1>Login</h1>
+            <% if (success && success.length > 0) { %>
+              <div class="alert alert-success"><%= success %></div>
+            <% } %>
+            <% if (error && error.length > 0) { %>
+              <div class="alert alert-danger"><%= error %></div>
+            <% } %>
             <form action="/login" method="POST">
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
@@ -89,19 +94,7 @@
     </div>
     <%- include('partials/footer') %>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-      <% if (success && success.length > 0) { %>
-        toastr.success('<%= success %>');
-        setTimeout(function() {
-          window.location.href = '/';
-        }, 1000); // Espera 3 segundos antes de redirecionar
-      <% } %>
-      <% if (error && error.length > 0) { %>
-        toastr.error('<%= error %>');
-      <% } %>
-    </script>
 </body>
 </html>

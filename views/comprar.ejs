@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra de Produto</title>
+    <title>Checkout - Importae</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/stylesheets/navbar.css">
@@ -17,34 +17,52 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding-top: 70px; /* Ajuste de espaço para a altura da navbar */
+            padding-top: 70px;
         }
 
         .main-content {
-            flex: 1; /* Ocupa o máximo de espaço possível entre a navbar e o footer */
+            flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px 0; /* Adiciona espaçamento vertical */
+            align-items: flex-start;
+            padding: 20px;
         }
 
         .checkout-container {
             width: 100%;
-            max-width: 800px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
+            max-width: 1000px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 20px;
         }
 
-        .checkout-container h2 {
-            font-size: 1.75rem;
+        .checkout-form {
+            flex: 2;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .product-summary {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .product-summary h4 {
+            font-size: 1.5rem;
             font-weight: bold;
             color: #003366;
-            text-align: center;
+        }
+
+        .checkout-form h4 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #003366;
             margin-bottom: 20px;
         }
 
@@ -53,11 +71,24 @@
             color: #003366;
         }
 
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: none;
+        }
+
+        .form-control:focus {
+            border-color: #00AEEF;
+            box-shadow: 0 0 0 0.2rem rgba(0, 174, 239, 0.25);
+        }
+
         .btn-primary {
             background-color: #003366;
             border: none;
             font-weight: bold;
             transition: background-color 0.3s ease;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         .btn-primary:hover {
@@ -65,8 +96,29 @@
         }
 
         .carousel-item img {
-            max-height: 400px; /* Ajuste a altura máxima da imagem */
-            object-fit: cover; /* Ajuste a imagem para cobrir o espaço disponível */
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .payment-options select {
+            flex-grow: 1;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            color: #003366;
         }
     </style>
 </head>
@@ -75,65 +127,82 @@
 
     <div class="main-content">
         <div class="checkout-container">
-            <h2>Você está comprando <%= produto.nome %></h2>
 
-            <!-- Exibindo as fotos do produto -->
-            <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                    <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
-                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                            <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
-                        </div>
-                    <% }); %>
-                </div>
-                <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-
-            <p class="mt-2">Preço: R$ <%= produto.preco %></p>
-            <p class="mt-2">Estoque disponível: <%= produto.estoque %></p>
-
-            <% if (typeof erro !== 'undefined') { %>
-                <div class="alert alert-danger"><%= erro %></div>
-            <% } %>
-
-            <form action="/comprar/<%= produto.id %>" method="POST">
+           <!-- Formulário de checkout -->
+<div class="checkout-form">
+    <h4>Informações Pessoais</h4>
+    <form action="/comprar/<%= produto.id %>" method="POST">
+        <!-- Primeira coluna: Nome e CPF -->
+        <div class="form-row">
+            <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <label for="nomeCompleto">Nome completo:</label>
                     <input type="text" id="nomeCompleto" name="nomeCompleto" class="form-control" required>
                 </div>
-                
+            </div>
+
+            <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <label for="cpf">CPF:</label>
                     <input type="text" id="cpf" name="cpf" class="form-control" required>
                 </div>
-                
-                <div class="form-group">
-                    <label for="endereco">Endereço:</label>
-                    <input type="text" id="endereco" name="endereco" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="formaPagamento">Forma de pagamento:</label>
-                    <select id="formaPagamento" name="formaPagamento" class="form-control" required>
-                        <option value="pix">PIX</option>
-                        <option value="cartao">Cartão</option>
-                    </select>
+            </div>
+        </div>
+
+        <!-- Seção de endereço -->
+        <h4>Endereço de Entrega</h4>
+        <div class="form-group">
+            <label for="endereco">Endereço completo:</label>
+            <textarea id="endereco" name="endereco" class="form-control" rows="3" placeholder="Rua, número, complemento, bairro, cidade, estado, CEP" required></textarea>
+        </div>
+
+        <!-- Segunda coluna: Forma de pagamento -->
+        <h4>Forma de Pagamento</h4>
+        <div class="form-group">
+            <label for="formaPagamento">Escolha a forma de pagamento:</label>
+            <div class="payment-options">
+                <i class="bi bi-cash-coin icon"></i>
+                <select id="formaPagamento" name="formaPagamento" class="form-control" required>
+                    <option value="pix">PIX</option>
+                    <option value="cartao">Cartão</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Finalizar Compra</button>
+    </form>
+</div>
+
+
+            <!-- Terceira coluna: Produto -->
+            <div class="product-summary">
+                <h4>Resumo do Pedido</h4>
+                <div id="carousel<%= produto.id %>" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <% JSON.parse(produto.fotos).forEach((foto, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+                            </div>
+                        <% }); %>
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel<%= produto.id %>" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel<%= produto.id %>" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
 
+                <p class="price mt-3">Preço unitário: R$ <span id="preco-unitario"><%= produto.preco %></span></p>
+                <p class="stock">Estoque disponível: <%= produto.estoque %></p>
                 <div class="form-group">
                     <label for="quantidade">Quantidade:</label>
                     <input type="number" id="quantidade" name="quantidade" class="form-control" required min="1" max="<%= produto.estoque %>">
                 </div>
-                
-                <button type="submit" class="btn btn-primary w-100 mt-3">Comprar</button>
-            </form>
+                <p class="total">Valor total: R$ <span id="valor-total"><%= produto.preco %></span></p>
+            </div>
         </div>
     </div>
 
@@ -143,5 +212,13 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('quantidade').addEventListener('input', function() {
+            const precoUnitario = parseFloat(document.getElementById('preco-unitario').innerText);
+            const quantidade = parseInt(this.value);
+            const valorTotal = precoUnitario * quantidade;
+            document.getElementById('valor-total').innerText = valorTotal.toFixed(2);
+        });
+    </script>
 </body>
 </html>

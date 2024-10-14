@@ -113,9 +113,11 @@
           <p><strong>De Onde Importa:</strong> <%= usuario.deOndeImporta %></p> <!-- Adiciona De Onde Importa -->
           <p><strong>Sobre Mim:</strong> <%= usuario.sobreMim %></p> <!-- Adiciona Sobre Mim -->
         <% } %>
-        <a href="/chat?destinatarioId=<%= usuario.id %>" class="btn btn-info w-100 mb-3">Chat</a>
-        <% if (usuario.tipo === 'vendedor') { %>
-          <button type="button" class="btn btn-warning w-100 mb-3" data-toggle="modal" data-target="#solicitacaoModal">Solicitar Produto</button>
+        <% if (usuario.id !== user.id) { %> <!-- Verifica se o usuário logado é diferente do perfil visualizado -->
+          <a href="/chat?destinatarioId=<%= usuario.id %>" class="btn btn-info w-100 mb-3">Chat</a>
+          <% if (usuario.tipo === 'vendedor') { %>
+            <button type="button" class="btn btn-warning w-100 mb-3" data-toggle="modal" data-target="#solicitacaoModal">Solicitar Produto</button>
+          <% } %>
         <% } %>
       </div>
       <div class="profile-content">

@@ -48,6 +48,7 @@ router.post('/:id', async (req, res) => {
         produtoId: produto.id,
         clienteId: req.user.id,
         vendedorId: produto.vendedorId,
+        quantidade, // Adiciona a quantidade aqui
     });
 
     produto.estoque -= quantidade;
