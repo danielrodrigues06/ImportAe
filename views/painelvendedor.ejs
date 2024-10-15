@@ -225,6 +225,7 @@
                   <th>Preço</th>
                   <th>Cliente</th>
                   <th>Email do Cliente</th>
+                  <th>Quantidade</th> <!-- Adicione esta linha -->
                   <th>Status</th>
                   <th>Ações</th>
                 </tr>
@@ -236,6 +237,7 @@
                     <td>R$<%= compra.produto.preco %></td>
                     <td><%= compra.cliente.nome %></td>
                     <td><%= compra.cliente.email %></td>
+                    <td><%= compra.quantidade %></td> <!-- Adicione esta linha -->
                     <td>
                       <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
                         <select name="status" class="form-control">

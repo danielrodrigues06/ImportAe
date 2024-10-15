@@ -38,7 +38,8 @@ router.get("/", async (req, res) => {
           required: false,
           where: { clienteId: req.user.id }
         }
-      ]
+      ],
+      attributes: ['id', 'quantidade', 'status', 'codigoRastreio'] // Adicione 'codigoRastreio' aqui
     });
     res.render("painelCliente", { cliente, compras });
   } catch (error) {
