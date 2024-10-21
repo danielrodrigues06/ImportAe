@@ -57,7 +57,9 @@ router.get("/", async (req, res) => {
       ]
     });
 
-    res.render("painelVendedor", { vendedor, produtos, compras, solicitacoes });
+    const categorias = ['Eletrônicos', 'Roupas', 'Livros', 'Móveis', 'Brinquedos', 'Ferramentas', 'Beleza', 'Esportes', 'Automotivo', 'Alimentos'];
+
+    res.render("painelVendedor", { vendedor, produtos, compras, solicitacoes, categorias });
   } catch (error) {
     console.error("Erro ao carregar o painel do vendedor:", error);
     res.status(500).send("Erro ao carregar o painel do vendedor.");
