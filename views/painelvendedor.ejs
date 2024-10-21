@@ -78,6 +78,9 @@
     .modal-footer .btn-primary {
       background-color: #003366;
     }
+
+    
+    
   </style>
 </head>
 <body>
@@ -161,170 +164,194 @@
           </div>
           <div class="tab-pane fade" id="pills-produtos" role="tabpanel" aria-labelledby="pills-produtos-tab">
             <h2>Seus Produtos</h2>
-            <div class="row">
+            <ul class="list-group">
               <% produtos.forEach(produto => { %>
-                <div class="col-md-4">
-                  <div class="card mb-4">
-                    <div class="card-body">
-                      <h5 class="card-title"><%= produto.nome %></h5>
-                      <p class="card-text"><%= produto.descricao %></p>
-                      <p class="card-text font-weight-bold">Preço: R$<%= produto.preco %></p>
-                      <form action="/painelVendedor/editar-produto/<%= produto.id %>" method="POST" class="mb-3" enctype="multipart/form-data">
-                        <div class="form-group">
-                          <label for="nomeProduto<%= produto.id %>">Nome do Produto</label>
-                          <input type="text" class="form-control" id="nomeProduto<%= produto.id %>" name="nome" value="<%= produto.nome %>" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="descricaoProduto<%= produto.id %>">Descrição</label>
-                          <textarea class="form-control" id="descricaoProduto<%= produto.id %>" name="descricao" rows="2" required><%= produto.descricao %></textarea>
-                        </div>
-                        <div class="form-group">
-                          <label for="precoProduto<%= produto.id %>">Preço</label>
-                          <input type="number" class="form-control" id="precoProduto<%= produto.id %>" name="preco" value="<%= produto.preco %>" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="categoriaProduto<%= produto.id %>">Categoria</label>
-                          <select class="form-control" id="categoriaProduto<%= produto.id %>" name="categoria" required>
-                            <option value="Categoria1" <%= produto.categoria === 'Categoria1' ? 'selected' : '' %>>Categoria 1</option>
-                            <option value="Categoria2" <%= produto.categoria === 'Categoria2' ? 'selected' : '' %>>Categoria 2</option>
-                            <option value="Categoria3" <%= produto.categoria === 'Categoria3' ? 'selected' : '' %>>Categoria 3</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="origemProduto<%= produto.id %>">Origem</label>
-                          <select class="form-control" id="origemProduto<%= produto.id %>" name="origem" required>
-                            <option value="China" <%= produto.origem === 'China' ? 'selected' : '' %>>China</option>
-                            <option value="EUA" <%= produto.origem === 'EUA' ? 'selected' : '' %>>EUA</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="foto">Foto:</label>
-                          <input type="file" id="foto" name="foto" multiple>
-                        </div>
-                        <div class="form-group">
-                          <label for="estoque">Estoque:</label>
-                          <input type="number" id="estoque" name="estoque" value="<%= produto.estoque %>" required>
-                        </div>
-                        <button type="submit" class="btn btn-warning btn-block">Salvar</button>
-                      </form>
-                      <form action="/painelVendedor/deletar-produto/<%= produto.id %>" method="POST">
-                        <button type="submit" class="btn btn-danger btn-block">Deletar</button>
-                      </form>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Produto:</strong> <%= produto.nome %> <br>
+                    <strong>Preço:</strong> R$ <%= produto.preco %>
+                  </div>
+                  <div>
+                    <!-- Botão de editar (ícone de lápis) -->
+                    <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#editarProdutoModal<%= produto.id %>">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+          
+                    <!-- Botão de excluir (ícone de lixo) -->
+                    <form action="/painelVendedor/deletar-produto/<%= produto.id %>" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </li>
+          
+                <!-- Modal para editar produto -->
+                <div class="modal fade" id="editarProdutoModal<%= produto.id %>" tabindex="-1" role="dialog" aria-labelledby="editarProdutoModalLabel<%= produto.id %>" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editarProdutoModalLabel<%= produto.id %>">Editar Produto - <%= produto.nome %></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="/painelVendedor/editar-produto/<%= produto.id %>" method="POST" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="nomeProduto<%= produto.id %>">Nome do Produto</label>
+                            <input type="text" class="form-control" id="nomeProduto<%= produto.id %>" name="nome" value="<%= produto.nome %>" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="descricaoProduto<%= produto.id %>">Descrição</label>
+                            <textarea class="form-control" id="descricaoProduto<%= produto.id %>" name="descricao" rows="2" required><%= produto.descricao %></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label for="precoProduto<%= produto.id %>">Preço</label>
+                            <input type="number" class="form-control" id="precoProduto<%= produto.id %>" name="preco" value="<%= produto.preco %>" required>
+                          </div>
+                          <div class="form-group">
+                            <label for="categoriaProduto<%= produto.id %>">Categoria</label>
+                            <select class="form-control" id="categoriaProduto<%= produto.id %>" name="categoria" required>
+                              <option value="Categoria1" <%= produto.categoria === 'Categoria1' ? 'selected' : '' %>>Categoria 1</option>
+                              <option value="Categoria2" <%= produto.categoria === 'Categoria2' ? 'selected' : '' %>>Categoria 2</option>
+                              <option value="Categoria3" <%= produto.categoria === 'Categoria3' ? 'selected' : '' %>>Categoria 3</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="origemProduto<%= produto.id %>">Origem</label>
+                            <select class="form-control" id="origemProduto<%= produto.id %>" name="origem" required>
+                              <option value="China" <%= produto.origem === 'China' ? 'selected' : '' %>>China</option>
+                              <option value="EUA" <%= produto.origem === 'EUA' ? 'selected' : '' %>>EUA</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="foto">Foto:</label>
+                            <input type="file" id="foto" name="foto" multiple>
+                          </div>
+                          <div class="form-group">
+                            <label for="estoque">Estoque:</label>
+                            <input type="number" id="estoque" name="estoque" value="<%= produto.estoque %>" required>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Salvar</button>
+                        </form>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                      </div>
                     </div>
                   </div>
                 </div>
               <% }); %>
-            </div>
+            </ul>
           </div>
           <div class="tab-pane fade" id="pills-compras" role="tabpanel" aria-labelledby="pills-compras-tab">
             <h2>Compras dos seus produtos</h2>
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Produto</th>
-                  <th>Preço</th>
-                  <th>Cliente</th>
-                  <th>Email do Cliente</th>
-                  <th>Quantidade</th> <!-- Adicione esta linha -->
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% compras.forEach(compra => { %>
-                  <tr>
-                    <td><%= compra.produto.nome %></td>
-                    <td>R$<%= compra.produto.preco %></td>
-                    <td><%= compra.cliente.nome %></td>
-                    <td><%= compra.cliente.email %></td>
-                    <td><%= compra.quantidade %></td> <!-- Adicione esta linha -->
-                    <td>
-                      <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
-                        <select name="status" class="form-control">
-                          <option value="aguardando pagamento" <%= compra.status === 'aguardando pagamento' ? 'selected' : '' %>>Aguardando Pagamento</option>
-                          <option value="pago" <%= compra.status === 'pago' ? 'selected' : '' %>>Pago</option>
-                          <option value="aguardando fotos" <%= compra.status === 'aguardando fotos' ? 'selected' : '' %>>Aguardando Fotos</option>
-                          <option value="fotos enviadas" <%= compra.status === 'fotos enviadas' ? 'selected' : '' %>>Fotos Enviadas</option>
-                          <option value="aguardando aprovação" <%= compra.status === 'aguardando aprovação' ? 'selected' : '' %>>Aguardando Aprovação</option>
-                          <option value="aprovado pelo cliente" <%= compra.status === 'aprovado pelo cliente' ? 'selected' : '' %>>Aprovado pelo Cliente</option>
-                          <option value="enviado" <%= compra.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
-                          <option value="entregue" <%= compra.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary mt-2">Atualizar Status</button>
-                      </form>
-                    </td>
-                    <!-- Dentro da tabela de compras -->
-                    <td>
-                      <form action="/painelvendedor/adicionar-rastreio/<%= compra.id %>" method="POST">
-                        <div class="form-group">
-                          <input type="text" name="codigoRastreio" class="form-control" placeholder="Código de Rastreio" value="<%= compra.codigoRastreio %>">
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-2">Adicionar Rastreio</button>
-                      </form>
-                    </td>
-                    <td>
-                      <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info">Chat com Cliente</a>
-                      <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#adicionarFotosModal<%= compra.id %>">Adicionar Fotos</button>
-                      <div class="modal fade" id="adicionarFotosModal<%= compra.id %>" tabindex="-1" role="dialog" aria-labelledby="adicionarFotosModalLabel<%= compra.id %>" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="adicionarFotosModalLabel<%= compra.id %>">Adicionar Fotos do Produto e da Embalagem</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <form action="/painelVendedor/adicionar-fotos/<%= compra.id %>" method="POST" enctype="multipart/form-data">
-                              <div class="modal-body">
-                                <div class="form-group">
-                                  <label for="fotos<%= compra.id %>">Fotos</label>
-                                  <input type="file" id="fotos<%= compra.id %>" name="fotos" multiple required>
-                                </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Enviar Fotos</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
+            <ul class="list-group">
+              <% compras.forEach(compra => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Produto:</strong> <%= compra.produto.nome %> <br>
+                    <strong>Cliente:</strong> <%= compra.cliente.nome %>
+                  </div>
+                  <div>
+                    <!-- Botão de balão de conversa para o chat -->
+                    <a href="/chat?destinatarioId=<%= compra.cliente.id %>" class="btn btn-info mr-2">
+                      <i class="bi bi-chat-dots"></i> Chat
+                    </a>
+          
+                    <!-- Botão de olho para gerenciar compra -->
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#gerenciarCompraModal<%= compra.id %>">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </li>
+          
+                <!-- Modal para gerenciar compra -->
+                <div class="modal fade" id="gerenciarCompraModal<%= compra.id %>" tabindex="-1" role="dialog" aria-labelledby="gerenciarCompraModalLabel<%= compra.id %>" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="gerenciarCompraModalLabel<%= compra.id %>">Gerenciar Compra - <%= compra.produto.nome %></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
                       </div>
-                      <% if (!compra.avaliacaoExistente) { %>
-                        <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-2">
+                      <div class="modal-body">
+                        <p><strong>Preço:</strong> R$<%= compra.produto.preco %></p>
+                        <p><strong>Cliente:</strong> <%= compra.cliente.nome %></p>
+                        <p><strong>Email do Cliente:</strong> <%= compra.cliente.email %></p>
+                        <p><strong>Quantidade:</strong> <%= compra.quantidade %></p>
+          
+                        <!-- Formulário para atualizar status -->
+                        <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
                           <div class="form-group">
-                            <label for="nota<%= compra.id %>">Nota:</label>
-                            <select class="form-control" id="nota<%= compra.id %>" name="nota" required>
-                              <option value="1">1 Estrela</option>
-                              <option value="2">2 Estrelas</option>
-                              <option value="3">3 Estrelas</option>
-                              <option value="4">4 Estrelas</option>
-                              <option value="5">5 Estrelas</option>
+                            <label for="status<%= compra.id %>">Status:</label>
+                            <select name="status" class="form-control" id="status<%= compra.id %>">
+                              <option value="aguardando pagamento" <%= compra.status === 'aguardando pagamento' ? 'selected' : '' %>>Aguardando Pagamento</option>
+                              <option value="pago" <%= compra.status === 'pago' ? 'selected' : '' %>>Pago</option>
+                              <option value="aguardando fotos" <%= compra.status === 'aguardando fotos' ? 'selected' : '' %>>Aguardando Fotos</option>
+                              <option value="fotos enviadas" <%= compra.status === 'fotos enviadas' ? 'selected' : '' %>>Fotos Enviadas</option>
+                              <option value="aguardando aprovação" <%= compra.status === 'aguardando aprovação' ? 'selected' : '' %>>Aguardando Aprovação</option>
+                              <option value="aprovado pelo cliente" <%= compra.status === 'aprovado pelo cliente' ? 'selected' : '' %>>Aprovado pelo Cliente</option>
+                              <option value="enviado" <%= compra.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
+                              <option value="entregue" <%= compra.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
                             </select>
                           </div>
-                          <div class="form-group">
-                            <label for="comentario<%= compra.id %>">Comentário:</label>
-                            <textarea class="form-control" id="comentario<%= compra.id %>" name="comentario" rows="2"></textarea>
-                          </div>
-                          <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+                          <button type="submit" class="btn btn-primary">Atualizar Status</button>
                         </form>
-                      <% } else { %>
-                        <button class="btn btn-secondary mt-2" disabled>Avaliação Enviada</button>
-                      <% } %>
-                    </td>
-                  </tr>
-
-                  <td>
-                    <form action="/painelvendedor/adicionar-rastreio/<%= compra.id %>" method="POST">
-                      <div class="form-group">
-                        <input type="text" name="codigoRastreio" class="form-control" placeholder="Código de Rastreio" value="<%= compra.codigoRastreio %>">
+          
+                        <!-- Formulário para adicionar código de rastreio -->
+                        <form action="/painelvendedor/adicionar-rastreio/<%= compra.id %>" method="POST" class="mt-3">
+                          <div class="form-group">
+                            <label for="codigoRastreio<%= compra.id %>">Código de Rastreio:</label>
+                            <input type="text" name="codigoRastreio" class="form-control" id="codigoRastreio<%= compra.id %>" value="<%= compra.codigoRastreio %>">
+                          </div>
+                          <button type="submit" class="btn btn-primary">Adicionar Rastreio</button>
+                        </form>
+          
+                        <!-- Formulário para enviar fotos -->
+                        <form action="/painelVendedor/adicionar-fotos/<%= compra.id %>" method="POST" enctype="multipart/form-data" class="mt-3">
+                          <div class="form-group">
+                            <label for="fotos<%= compra.id %>">Adicionar Fotos:</label>
+                            <input type="file" id="fotos<%= compra.id %>" name="fotos" multiple required>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Enviar Fotos</button>
+                        </form>
+          
+                        <!-- Avaliação -->
+                        <% if (!compra.avaliacaoExistente) { %>
+                          <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-3">
+                            <div class="form-group">
+                              <label for="nota<%= compra.id %>">Nota:</label>
+                              <select class="form-control" id="nota<%= compra.id %>" name="nota" required>
+                                <option value="1">1 Estrela</option>
+                                <option value="2">2 Estrelas</option>
+                                <option value="3">3 Estrelas</option>
+                                <option value="4">4 Estrelas</option>
+                                <option value="5">5 Estrelas</option>
+                              </select>
+                            </div>
+                            <div class="form-group">
+                              <label for="comentario<%= compra.id %>">Comentário:</label>
+                              <textarea class="form-control" id="comentario<%= compra.id %>" name="comentario" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+                          </form>
+                        <% } else { %>
+                          <button class="btn btn-secondary mt-3" disabled>Avaliação Enviada</button>
+                        <% } %>
                       </div>
-                      <button type="submit" class="btn btn-primary mt-2">Adicionar Rastreio</button>
-                    </form>
-                  </td>
-                <% }); %>
-              </tbody>
-            </table>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            </ul>
           </div>
+          
           <div class="tab-pane fade" id="pills-solicitacoes" role="tabpanel" aria-labelledby="pills-solicitacoes-tab">
             <h2>Suas Solicitações</h2>
             <div class="row">
