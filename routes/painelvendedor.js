@@ -43,9 +43,15 @@ router.get("/", async (req, res) => {
           model: Usuario,
           as: 'cliente',
           attributes: ['id', 'nome', 'email']
+        },
+        {
+          model: Avaliacao,
+          as: 'avaliacoes',
+          where: { vendedorId: req.user.id, tipo: 'vendedor_para_cliente' },
+          required: false
         }
       ],
-      attributes: ['id', 'endereco', 'quantidade', 'status', 'codigoRastreio'] // Inclua o campo 'endereco' aqui
+      attributes: ['id', 'endereco', 'quantidade', 'status', 'codigoRastreio']
     });
     const solicitacoes = await Solicitacao.findAll({
       where: { vendedorId: req.user.id },
@@ -162,6 +168,7 @@ router.post("/atualizar-status/:id", async (req, res) => {
     compra.status = status;
     await compra.save();
 
+    req.flash('success', 'Compra atualizada com sucesso.');
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao atualizar status da compra:", error);
@@ -185,6 +192,7 @@ router.post("/adicionar-fotos/:id", upload.array('fotos', 5), async (req, res) =
     compra.status = "fotos enviadas";
     await compra.save();
 
+    req.flash('success', 'Compra atualizada com sucesso.');
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao adicionar fotos:", error);
@@ -211,6 +219,7 @@ router.post("/adicionar-rastreio/:id", async (req, res) => {
     compra.codigoRastreio = codigoRastreio;
     await compra.save();
 
+    req.flash('success', 'Compra atualizada com sucesso.');
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao adicionar código de rastreio:", error);

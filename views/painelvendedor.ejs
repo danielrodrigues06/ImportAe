@@ -293,8 +293,8 @@
                         <p><strong>Cliente:</strong> <%= compra.cliente.nome %></p>
                         <p><strong>Email do Cliente:</strong> <%= compra.cliente.email %></p>
                         <p><strong>Quantidade:</strong> <%= compra.quantidade %></p>
-                        <p><strong>Endereço:</strong> <%= compra.endereco %></p> <!-- Exibe o endereço aqui -->
-
+                        <p><strong>Endereço:</strong> <%= compra.endereco %></p>
+                
                         <!-- Formulário para atualizar status -->
                         <form action="/painelvendedor/atualizar-status/<%= compra.id %>" method="POST">
                           <div class="form-group">
@@ -304,15 +304,13 @@
                               <option value="pago" <%= compra.status === 'pago' ? 'selected' : '' %>>Pago</option>
                               <option value="aguardando fotos" <%= compra.status === 'aguardando fotos' ? 'selected' : '' %>>Aguardando Fotos</option>
                               <option value="fotos enviadas" <%= compra.status === 'fotos enviadas' ? 'selected' : '' %>>Fotos Enviadas</option>
-                              <option value="aguardando aprovação" <%= compra.status === 'aguardando aprovação' ? 'selected' : '' %>>Aguardando Aprovação</option>
-                              <option value="aprovado pelo cliente" <%= compra.status === 'aprovado pelo cliente' ? 'selected' : '' %>>Aprovado pelo Cliente</option>
                               <option value="enviado" <%= compra.status === 'enviado' ? 'selected' : '' %>>Enviado</option>
                               <option value="entregue" <%= compra.status === 'entregue' ? 'selected' : '' %>>Entregue</option>
                             </select>
                           </div>
                           <button type="submit" class="btn btn-primary">Atualizar Status</button>
                         </form>
-
+                
                         <!-- Formulário para adicionar código de rastreio -->
                         <form action="/painelvendedor/adicionar-rastreio/<%= compra.id %>" method="POST" class="mt-3">
                           <div class="form-group">
@@ -321,7 +319,7 @@
                           </div>
                           <button type="submit" class="btn btn-primary">Adicionar Rastreio</button>
                         </form>
-
+                
                         <!-- Formulário para enviar fotos -->
                         <form action="/painelVendedor/adicionar-fotos/<%= compra.id %>" method="POST" enctype="multipart/form-data" class="mt-3">
                           <div class="form-group">
@@ -330,9 +328,9 @@
                           </div>
                           <button type="submit" class="btn btn-primary">Enviar Fotos</button>
                         </form>
-
+                
                         <!-- Avaliação -->
-                        <% if (!compra.avaliacaoExistente) { %>
+                        <% if (compra.avaliacoes.length === 0) { %>
                           <form action="/avaliacao/vendedor/<%= compra.id %>" method="POST" class="mt-3">
                             <div class="form-group">
                               <label for="nota<%= compra.id %>">Nota:</label>
