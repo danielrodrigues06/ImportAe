@@ -59,9 +59,11 @@ router.post('/vendedor/:compraId', async (req, res) => {
             tipo: 'vendedor_para_cliente' // Adicionando tipo na criação
         });
 
+        req.flash('success', 'Avaliação enviada com sucesso.');
         res.redirect('/painelVendedor'); // Redireciona para o painel do vendedor
     } catch (error) {
         console.error('Erro ao criar avaliação:', error);
+        req.flash('error', 'Erro ao criar avaliação.');
         res.status(500).send('Erro ao criar avaliação.');
     }
 });
@@ -105,9 +107,11 @@ router.post('/:compraId', upload.array('fotos', 5), async (req, res) => {
             tipo: 'cliente_para_vendedor' // Adicionando tipo na criação
         });
 
+        req.flash('success', 'Avaliação enviada com sucesso.');
         res.redirect('/painelCliente'); // Redireciona para o painel do cliente
     } catch (error) {
         console.error('Erro ao criar avaliação:', error);
+        req.flash('error', 'Erro ao criar avaliação.');
         res.status(500).send('Erro ao criar avaliação.');
     }
 });

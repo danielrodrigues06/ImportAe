@@ -40,21 +40,28 @@ router.post('/:id', async (req, res) => {
         return res.status(400).send('Quantidade insuficiente no estoque');
     }
 
-    const novaCompra = await Compra.create({
-        nomeCompleto,
-        cpf,
-        endereco,
-        formaPagamento,
-        produtoId: produto.id,
-        clienteId: req.user.id,
-        vendedorId: produto.vendedorId,
-        quantidade, // Adiciona a quantidade aqui
-    });
+    try {
+        const novaCompra = await Compra.create({
+            nomeCompleto,
+            cpf,
+            endereco,
+            formaPagamento,
+            produtoId: produto.id,
+            clienteId: req.user.id,
+            vendedorId: produto.vendedorId,
+            quantidade,
+        });
 
-    produto.estoque -= quantidade;
-    await produto.save();
+        produto.estoque -= quantidade;
+        await produto.save();
 
-    res.redirect('/produtos');
+        req.flash('success', 'Compra realizada com sucesso');
+        res.redirect('/painelCliente');
+    } catch (error) {
+        console.error('Erro ao realizar compra:', error);
+        req.flash('error', 'Erro ao realizar compra');
+        res.redirect('/comprar/' + req.params.id);
+    }
 });
 
 module.exports = router;

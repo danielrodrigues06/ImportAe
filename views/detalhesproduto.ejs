@@ -199,6 +199,12 @@
       border-top: 1px solid #ddd;
       margin: 10px 0;
     }
+    
+    .btn-buy.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
   </style>
 </head>
 <body>
@@ -241,7 +247,11 @@
               </div>
             </div>
             <div class="d-flex align-items-center">
-              <a href="/comprar/<%= produto.id %>" class="btn btn-buy">Comprar</a>
+              <% if (produto.estoque > 0) { %>
+                <a href="/comprar/<%= produto.id %>" class="btn btn-buy">Comprar</a>
+              <% } else { %>
+                <button class="btn btn-buy disabled" disabled>Indisponível</button>
+              <% } %>
               <span class="product-price">R$ <%= produto.preco %></span>
             </div>
           </div>
