@@ -83,7 +83,14 @@
                 </div>
                 <div class="mb-3">
                     <label for="senha" class="form-label">Senha:</label>
-                    <input type="password" class="form-control" id="senha" name="senha" required>
+                    <div class="input-group">
+                      <input type="password" class="form-control" id="senha" name="senha" required>
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                      </div>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Entrar</button>
             </form>
@@ -96,5 +103,22 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordField = document.getElementById('senha');
+        const passwordFieldType = passwordField.getAttribute('type');
+        const icon = this.querySelector('i');
+
+        if (passwordFieldType === 'password') {
+          passwordField.setAttribute('type', 'text');
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        } else {
+          passwordField.setAttribute('type', 'password');
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      });
+    </script>
 </body>
 </html>

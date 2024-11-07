@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
         {
           model: Produto,
           as: 'produto',
-          attributes: ['nome', 'preco', 'fotos']
+          attributes: ['nome', 'preco', 'fotos', 'vendedorId'] // Inclua o campo 'vendedorId' aqui
         },
         {
           model: Avaliacao,

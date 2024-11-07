@@ -44,7 +44,8 @@ router.get("/", async (req, res) => {
           as: 'cliente',
           attributes: ['id', 'nome', 'email']
         }
-      ]
+      ],
+      attributes: ['id', 'endereco', 'quantidade', 'status', 'codigoRastreio'] // Inclua o campo 'endereco' aqui
     });
     const solicitacoes = await Solicitacao.findAll({
       where: { vendedorId: req.user.id },
