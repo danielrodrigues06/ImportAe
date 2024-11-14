@@ -35,9 +35,11 @@ router.post('/', upload.array('fotos', 5), async (req, res) => {
       vendedorId,
     });
 
+    req.flash('success', 'Solicitação enviada com sucesso.');
     res.redirect(`/perfil/${vendedorId}`); // Redireciona para o perfil do vendedor
   } catch (error) {
     console.error('Erro ao criar solicitação:', error);
+    req.flash('error', 'Erro ao criar solicitação.');
     res.status(500).send('Erro ao criar solicitação.');
   }
 });

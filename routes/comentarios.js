@@ -52,4 +52,29 @@ router.post('/responder/:comentarioId', async (req, res) => {
   }
 });
 
+// Rota para deletar um comentário
+router.post('/deletar/:comentarioId', async (req, res) => {
+  const { comentarioId } = req.params;
+  const usuarioId = req.user.id;
+
+  try {
+    const comentario = await Comentario.findByPk(comentarioId);
+
+    if (!comentario) {
+      return res.status(404).send('Comentário não encontrado');
+    }
+
+    if (comentario.usuarioId !== usuarioId) {
+      return res.status(403).send('Acesso negado: apenas o autor pode deletar este comentário');
+    }
+
+    await comentario.destroy();
+
+    res.redirect(`/produtos/${comentario.produtoId}`);
+  } catch (error) {
+    console.error('Erro ao deletar comentário:', error);
+    res.status(500).send('Erro ao deletar comentário.');
+  }
+});
+
 module.exports = router;

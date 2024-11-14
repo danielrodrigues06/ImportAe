@@ -372,10 +372,22 @@
                       <h5 class="card-title"><%= solicitacao.nomeProduto %></h5>
                       <p class="card-text">Preço Desejado: R$ <%= solicitacao.precoDesejado %></p>
                       <p class="card-text">Solicitado por: <a href="/perfil/<%= solicitacao.cliente.id %>"><%= solicitacao.cliente.nome %></a></p>
-                      <div class="card-text">
-                        <% JSON.parse(solicitacao.fotos).forEach(foto => { %>
-                          <img src="/imagens/<%= foto %>" class="img-fluid" alt="Foto do Produto">
-                        <% }); %>
+                      <div id="carouselSolicitacao<%= solicitacao.id %>" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <% JSON.parse(solicitacao.fotos).forEach((foto, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                              <img src="/imagens/<%= foto %>" class="d-block w-100" alt="Foto do Produto">
+                            </div>
+                          <% }); %>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselSolicitacao<%= solicitacao.id %>" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselSolicitacao<%= solicitacao.id %>" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
                       </div>
                       <a href="/chat?destinatarioId=<%= solicitacao.cliente.id %>" class="btn btn-info mt-2">Chat com Cliente</a>
                     </div>

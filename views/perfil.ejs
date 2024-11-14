@@ -101,6 +101,16 @@
 <body>
   <%- include('partials/navbar') %>
   <div class="content container mt-5">
+    <% if (success && success.length > 0) { %>
+      <div class="alert alert-success">
+          <%= success %>
+      </div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+      <div class="alert alert-danger">
+          <%= error %>
+      </div>
+    <% } %>
     <div class="profile-container">
       <div class="profile-sidebar">
         <h2>Perfil de <%= usuario.nome %></h2>

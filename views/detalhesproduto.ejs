@@ -247,7 +247,9 @@
               </div>
             </div>
             <div class="d-flex align-items-center">
-              <% if (produto.estoque > 0) { %>
+              <% if (user && user.tipo === 'vendedor') { %>
+                <button class="btn btn-buy disabled" disabled data-toggle="tooltip" data-placement="top" title="Você está logado como um vendedor e não pode comprar">Comprar</button>
+              <% } else if (produto.estoque > 0) { %>
                 <a href="/comprar/<%= produto.id %>" class="btn btn-buy">Comprar</a>
               <% } else { %>
                 <button class="btn btn-buy disabled" disabled>Indisponível</button>
@@ -286,7 +288,7 @@
               <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
           <% } %>
-
+        
           <div class="mt-4">
             <% produto.comentarios.forEach(comentario => { %>
               <div class="media mb-3">
@@ -294,7 +296,16 @@
                 <div class="media-body">
                   <h5 class="mt-0"><%= comentario.usuario.nome %></h5>
                   <p><%= comentario.comentario %></p>
-                  <small class="text-muted"><%= new Date(comentario.createdAt).toLocaleString() %></small>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><%= new Date(comentario.createdAt).toLocaleString() %></small>
+                    <% if (user && user.id === comentario.usuario.id) { %>
+                      <form action="/comentarios/deletar/<%= comentario.id %>" method="POST" class="ml-2">
+                        <button type="submit" class="btn btn-link p-0 ml-2" title="Deletar Comentário">
+                          <i class="bi bi-trash" style="color: red;"></i>
+                        </button>
+                      </form>
+                    <% } %>
+                  </div>
                   <% if (comentario.resposta) { %>
                     <div class="qa-divider"></div>
                     <div class="ml-4 mt-2">

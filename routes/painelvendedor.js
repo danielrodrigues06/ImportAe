@@ -90,10 +90,12 @@ router.post("/editar-perfil", upload.single('fotoPerfil'), async (req, res) => {
     }
 
     await Usuario.update(updateData, { where: { id: req.user.id } });
+    req.flash('success', 'Perfil editado com sucesso.');
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao editar perfil:", error);
-    res.status(500).send("Erro ao editar o perfil.");
+    req.flash('error', 'Erro ao editar o perfil.');
+    res.redirect("/painelVendedor");
   }
 });
 
@@ -135,10 +137,12 @@ router.post("/editar-produto/:id", upload.array('foto', 5), async (req, res) => 
 
     await Produto.update(updateData, { where: { id, vendedorId: req.user.id } });
 
+    req.flash('success', 'Produto editado com sucesso.');
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao editar produto:", error);
-    res.status(500).send("Erro ao editar o produto.");
+    req.flash('error', 'Erro ao editar o produto.');
+    res.redirect("/painelVendedor");
   }
 });
 
@@ -147,10 +151,13 @@ router.post("/deletar-produto/:id", async (req, res) => {
   try {
     const { id } = req.params;
     await Produto.destroy({ where: { id, vendedorId: req.user.id } });
+
+    req.flash('success', 'Produto deletado com sucesso.');
     res.redirect("/painelVendedor");
   } catch (error) {
     console.error("Erro ao deletar produto:", error);
-    res.status(500).send("Erro ao deletar o produto.");
+    req.flash('error', 'Erro ao deletar o produto.');
+    res.redirect("/painelVendedor");
   }
 });
 

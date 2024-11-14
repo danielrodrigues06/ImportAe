@@ -125,7 +125,7 @@ router.post("/", async function (req, res) {
         fotoPerfil: nomeimg,  // Salva a foto ou a imagem padrão
       });
 
-      req.flash('success', 'Cadastro realizado com sucesso!');
+      req.flash('success', 'Cadastro realizado com sucesso! Faça seu login.');
       return res.redirect("/login");
     });
   } catch (err) {
